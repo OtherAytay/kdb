@@ -134,12 +134,13 @@ function r10() {
     return randRange(1, 10, true)
 }
 
-/* --- Roulette Probability Distributions ---
+/* --- Roulette Probability Distributions --- */
+/*
 * - Constant object for each category 
 * - key for each difficulty
 * - key for each decision 
 */
-const buttplug = {
+export const buttplug = {
     easy: {
         use: [
             { min: 1, max: 7, use: false }, // 70%
@@ -183,7 +184,7 @@ const buttplug = {
     }
 }
 
-const underwear = {
+export const underwear = {
     easy: {
         upper: [
             { min: 1, max: 8, upper: "Bra" }, // 80%
@@ -237,7 +238,7 @@ const underwear = {
     },
 }
 
-const outfit = {
+export const outfit = {
     easy: {
         top: [
             {min: 1, max: 4, top: "None"}, // 40%
@@ -315,7 +316,7 @@ const outfit = {
     }
 }
 
-const bdsm = {
+export const bdsm = {
     easy: {
         count: [
             {min: 1, max: 5, count: 0}, // 50%
@@ -372,7 +373,7 @@ const bdsm = {
     },
 }
 
-const wrists = {
+export const wrists = {
     easy: {
         use: [
             { min: 1, max: 5, use: false }, // 50%
@@ -418,7 +419,7 @@ const wrists = {
     },
 }
 
-const ankles = {
+export const ankles = {
     easy: {
         use: [
             { min: 1, max: 5, use: false }, // 50%
@@ -459,4 +460,15 @@ const ankles = {
             { min: 7, max: 10, binding: "Spread Eagle" }, // 40%
         ]
     },
+}
+
+export default function CategoryDists(category) {
+    switch (category) {
+        case "Buttplug": return buttplug
+        case "Underwear": return underwear
+        case "Outfit": return outfit
+        case "BDSM": return bdsm      
+        case "Wrists": return wrists
+        case "Ankles": return ankles    
+    }
 }
