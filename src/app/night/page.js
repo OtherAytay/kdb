@@ -27,6 +27,7 @@ export default function Home() {
   useEffect(() => {
     const Masonry = require('masonry-layout')
     new Masonry('[data-masonry]').layout()
+    resetAll()
   }, [difficulty])
 
   return (
@@ -149,12 +150,7 @@ function handleRoll(category, difficulty) {
   var results = rollCategory(category, difficulty)
   console.log(results)
 
-  // Reset roll results
-  for (const decision of document.querySelectorAll('[id^=' + category.toLowerCase() + ']')) {
-    if (!decision.id.endsWith("_automatic")) {
-      decision.classList.remove('active')
-    }
-  }
+  resetRoll(category)
 
   for (const result of results.filter((r) => typeof r.roll == 'number')) {
     var idx = 1
@@ -176,4 +172,21 @@ function rollAll(difficulty) {
   handleRoll("BDSM", difficulty);
   handleRoll("Wrists", difficulty);
   handleRoll("Ankles", difficulty);
+}
+
+function resetRoll(category) {
+  for (const decision of document.querySelectorAll('[id^=' + category.toLowerCase() + ']')) {
+    if (!decision.id.endsWith("_automatic")) {
+      decision.classList.remove('active')
+    }
+  }
+}
+
+function resetAll() {
+  resetRoll("Buttplug");
+  resetRoll("Underwear");
+  resetRoll("Outfit");
+  resetRoll("BDSM");
+  resetRoll("Wrists");
+  resetRoll("Ankles");
 }
