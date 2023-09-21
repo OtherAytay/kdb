@@ -1,9 +1,10 @@
 'use client'
 import Image from 'next/image'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button'
 import ToggleButton from 'react-bootstrap/ToggleButton'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 import Container from 'react-bootstrap/Container'
 import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
@@ -11,8 +12,9 @@ import Col from 'react-bootstrap/Col'
 import Badge from 'react-bootstrap/Badge'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Script from 'next/script'
-import {categoryDists} from './roulette.js'
-import {rollCategory} from './roulette.js'
+import { categoryDists } from './roulette.js'
+import { rollCategory } from './roulette.js'
+import Masonry from 'masonry-layout'
 
 export default function Home() {
   const [difficulty, setDifficulty] = useState('easy');
@@ -23,31 +25,43 @@ export default function Home() {
     { name: 'Extreme', value: "extreme" }
   ]
 
+  useEffect(() => {
+    (new Masonry('[data-masonry]')).layout()
+  }, [difficulty])
+
   return (
     <main>
-      <Script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" />
       <Container className="mt-2">
         {/* Options */}
         <Row className="mb-2">
           <Col className="d-flex justify-content-center">
             <Card className="p-2 d-inline-flex">
-              <ButtonGroup>
-                {challengeRadios.map((radio, idx) => (
-                  <ToggleButton
-                    key={idx}
-                    id={`radio-${radio.name.toLowerCase()}`}
-                    type="radio"
-                    variant={"outline-" + radio.name.toLowerCase()}
-                    className={difficulty == radio.value ? "active" : ""}
-                    name="radio"
-                    value={radio.value}
-                    checked={difficulty == radio.value}
-                    onChange={(e) => setDifficulty(e.currentTarget.value)}
-                  >
-                    {radio.name}
-                  </ToggleButton>
-                ))}
-              </ButtonGroup>
+              <ButtonToolbar>
+                <ButtonGroup>
+                  {challengeRadios.map((radio, idx) => (
+                    <ToggleButton
+                      key={idx}
+                      id={`radio-${radio.name.toLowerCase()}`}
+                      type="radio"
+                      variant={"outline-" + radio.name.toLowerCase()}
+                      className={difficulty == radio.value ? "active" : ""}
+                      name="radio"
+                      value={radio.value}
+                      checked={difficulty == radio.value}
+                      onChange={(e) => { setDifficulty(e.currentTarget.value) }}
+                    >
+                      {radio.name}
+                    </ToggleButton>
+                  ))}
+                </ButtonGroup>
+                <Button
+                  id="roll_all"
+                  type="button"
+                  className="ms-2"
+                  onClick={(e) => rollAll(difficulty)}>
+                  Roll All
+                </Button>
+              </ButtonToolbar>
             </Card>
           </Col>
         </Row>
@@ -61,11 +75,12 @@ export default function Home() {
           <RouletteCard category="Ankles" difficulty={difficulty} />
         </Row>
       </Container>
-
+      {/* <Script id="masonry">{`var msnry = new Masonry('[data-masonry]')`}</Script> */}
     </main>
-
   )
 }
+
+
 
 const CategoryCode = {
   "Buttplug": "sexuality",
@@ -77,6 +92,20 @@ const CategoryCode = {
 }
 
 export function RouletteCard({ category, difficulty }) {
+  var automatic = null
+  if (category == "BDSM" && (difficulty == "hard" || difficulty == "extreme")) {
+    automatic = (
+      <ListGroup.Item key='automatic' id={category.toLowerCase() + "_gear_automatic"} className="active">
+        <Badge bg={CategoryCode[category]}>
+          Automatic
+        </Badge>
+        <span className="float-end">
+          {"Collar"}
+        </span>
+      </ListGroup.Item>
+    )
+  }
+
   return (
     <Col className="col-md-4 col-sm-6 col-xs-12 mb-2">
       <Card>
@@ -87,8 +116,9 @@ export function RouletteCard({ category, difficulty }) {
           {Object.entries(categoryDists(category)[difficulty]).map(([rollType, decisions], idx) => (
             [<h5 key={"decision_header_" + idx} className="fw-bold">{rollType.charAt(0).toUpperCase() + rollType.slice(1)}</h5>,
             <ListGroup key={"decision_group_" + idx} className="mb-2">
+              {rollType == "gear" ? automatic : null}
               {decisions.map((decision, idx) => (
-                <ListGroup.Item key={idx} id={category.toLowerCase() + "_" + rollType + "_" + (idx+1)}>
+                <ListGroup.Item key={idx + 1} id={category.toLowerCase() + "_" + rollType + "_" + (idx + 1)}>
                   <Badge bg={CategoryCode[category]}>
                     {decision.min == decision.max ? decision.min : decision.min + "-" + decision.max}
                   </Badge>
@@ -101,14 +131,14 @@ export function RouletteCard({ category, difficulty }) {
           ))}
         </Card.Body>
         <Card.Footer className="text-center">
-              <Button
-                id={"roll_" + category.toLowerCase()}
-                type="button"
-                variant={CategoryCode[category]}
-                className="w-75 fw-bold"
-                onClick={(e) => handleRoll(category, difficulty)}>
-                Roll
-              </Button>
+          <Button
+            id={"roll_" + category.toLowerCase()}
+            type="button"
+            variant={CategoryCode[category]}
+            className="w-75 fw-bold"
+            onClick={(e) => handleRoll(category, difficulty)}>
+            Roll
+          </Button>
         </Card.Footer>
       </Card>
     </Col>
@@ -121,18 +151,29 @@ function handleRoll(category, difficulty) {
 
   // Reset roll results
   for (const decision of document.querySelectorAll('[id^=' + category.toLowerCase() + ']')) {
-    decision.classList.remove('active')
+    if (!decision.id.endsWith("_automatic")) {
+      decision.classList.remove('active')
+    }
   }
 
-  for (const result of results) {
+  for (const result of results.filter((r) => typeof r.roll == 'number')) {
     var idx = 1
-    for (const temp of categoryDists(category)[difficulty][result.rollType.toLowerCase()]) { 
+    for (const temp of categoryDists(category)[difficulty][result.rollType.toLowerCase()]) {
       if (temp.min <= result.roll && result.roll <= temp.max) {
         break
       } else {
         idx++
-      } 
+      }
     }
     document.getElementById(category.toLowerCase() + "_" + result.rollType.toLowerCase() + "_" + idx).classList.add('active')
   }
+}
+
+function rollAll(difficulty) {
+  handleRoll("Buttplug", difficulty);
+  handleRoll("Underwear", difficulty);
+  handleRoll("Outfit", difficulty);
+  handleRoll("BDSM", difficulty);
+  handleRoll("Wrists", difficulty);
+  handleRoll("Ankles", difficulty);
 }
