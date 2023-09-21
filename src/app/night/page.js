@@ -36,33 +36,42 @@ export default function Home() {
         {/* Options */}
         <Row className="mb-2">
           <Col className="d-flex justify-content-center">
-            <Card className="p-2 d-inline-flex">
-              <ButtonToolbar>
-                <ButtonGroup>
-                  {challengeRadios.map((radio, idx) => (
-                    <ToggleButton
-                      key={idx}
-                      id={`radio-${radio.name.toLowerCase()}`}
-                      type="radio"
-                      variant={"outline-" + radio.name.toLowerCase()}
-                      className={difficulty == radio.value ? "active" : ""}
-                      name="radio"
-                      value={radio.value}
-                      checked={difficulty == radio.value}
-                      onChange={(e) => { setDifficulty(e.currentTarget.value) }}
-                    >
-                      {radio.name}
-                    </ToggleButton>
-                  ))}
-                </ButtonGroup>
+            <Card className="p-2 overflow-x-scroll">
+              <ButtonGroup>
+                {challengeRadios.map((radio, idx) => (
+                  <ToggleButton
+                    key={idx}
+                    id={`radio-${radio.name.toLowerCase()}`}
+                    type="radio"
+                    variant={"outline-" + radio.name.toLowerCase()}
+                    className={difficulty == radio.value ? "active" : ""}
+                    name="radio"
+                    value={radio.value}
+                    checked={difficulty == radio.value}
+                    onChange={(e) => { setDifficulty(e.currentTarget.value) }}
+                  >
+                    {radio.name}
+                  </ToggleButton>
+                ))}
+              </ButtonGroup>
+              <div class="d-flex mt-2">
+                <Button
+                  id="clear_all"
+                  type="button"
+                  variant="danger"
+                  className="me-2"
+                  style={{width: '33%'}}
+                  onClick={(e) => resetAll()}>
+                  Clear
+                </Button>
                 <Button
                   id="roll_all"
                   type="button"
-                  className="ms-2"
+                  className="flex-fill"
                   onClick={(e) => rollAll(difficulty)}>
                   Roll All
                 </Button>
-              </ButtonToolbar>
+              </div>
             </Card>
           </Col>
         </Row>

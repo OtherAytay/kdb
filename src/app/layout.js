@@ -27,7 +27,7 @@ export function NavLayout() {
   return (
     <Navbar expand="sm" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="#home">TestDB</Navbar.Brand>
+        <Navbar.Brand href="#home">KinkDB</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav variant="pills" className="mx-auto" defaultActiveKey='/'>
