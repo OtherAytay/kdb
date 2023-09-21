@@ -11,10 +11,9 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Badge from 'react-bootstrap/Badge'
 import ListGroup from 'react-bootstrap/ListGroup'
-import Script from 'next/script'
+import dynamic from 'next/dynamic'
 import { categoryDists } from './roulette.js'
 import { rollCategory } from './roulette.js'
-import Masonry from 'masonry-layout'
 
 export default function Home() {
   const [difficulty, setDifficulty] = useState('easy');
@@ -26,7 +25,8 @@ export default function Home() {
   ]
 
   useEffect(() => {
-    (new Masonry('[data-masonry]')).layout()
+    const Masonry = require('masonry-layout')
+    new Masonry('[data-masonry]').layout()
   }, [difficulty])
 
   return (
