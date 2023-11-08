@@ -36,7 +36,7 @@ export default function Home() {
         {/* Options */}
         <Row className="mb-2">
           <Col className="d-flex justify-content-center">
-            <Card className="p-2 overflow-x-scroll">
+            <Card className="p-2 overflow-x-auto">
               <ButtonGroup>
                 {challengeRadios.map((radio, idx) => (
                   <ToggleButton
