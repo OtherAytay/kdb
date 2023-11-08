@@ -14,6 +14,7 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import dynamic from 'next/dynamic'
 import { categoryDists } from './roulette.js'
 import { rollCategory } from './roulette.js'
+import { Accordion } from 'react-bootstrap';
 
 export default function Home() {
   const [difficulty, setDifficulty] = useState('easy');
@@ -60,7 +61,7 @@ export default function Home() {
                   type="button"
                   variant="danger"
                   className="me-2"
-                  style={{width: '33%'}}
+                  style={{ width: '33%' }}
                   onClick={(e) => resetAll()}>
                   Clear
                 </Button>
@@ -76,13 +77,11 @@ export default function Home() {
           </Col>
         </Row>
         {/* Roulette Cards */}
-        <Row className="overflow-x-auto d-flex" data-masonry="">
+        <ClothingCard difficulty={difficulty} />
+        <Row className="d-flex" data-masonry="">
           <RouletteCard category="Buttplug" difficulty={difficulty} />
-          <RouletteCard category="Underwear" difficulty={difficulty} />
-          <RouletteCard category="Outfit" difficulty={difficulty} />
           <RouletteCard category="BDSM" difficulty={difficulty} />
-          <RouletteCard category="Wrists" difficulty={difficulty} />
-          <RouletteCard category="Ankles" difficulty={difficulty} />
+          <RouletteCard category="Bondage" difficulty={difficulty} />
         </Row>
       </Container>
       {/* <Script id="masonry">{`var msnry = new Masonry('[data-masonry]')`}</Script> */}
@@ -94,11 +93,127 @@ export default function Home() {
 
 const CategoryCode = {
   "Buttplug": "sexuality",
-  "Underwear": "feminization",
-  "Outfit": "feminization",
+  "Clothing": "feminization",
   "BDSM": "bdsm",
-  "Wrists": "bdsm",
-  "Ankles": "bdsm"
+  "Bondage": "bdsm",
+}
+
+export function ClothingCard({ difficulty }) {
+  return (
+    <Row className="mb-2">
+      <Col>
+        <Card>
+          <Card.Header className="fw-bold text-center fs-4">
+            Clothing
+          </Card.Header>
+          <Card.Body>
+            {/* Underwear */}
+            <h5 className="text-center">Underwear</h5>
+            <ListGroup variant="horizontal" className="justify-content-center">
+              {categoryDists("Clothing")[difficulty]["underwear"].map((decision, idx) => (
+                <ListGroup.Item key={idx + 1} id={"clothing_underwear_" + (idx + 1)}>
+                  <Badge bg={CategoryCode["Clothing"]} className="me-2">
+                    {decision.min == decision.max ? decision.min : decision.min + "-" + decision.max}
+                  </Badge>
+                  <span className="float-end">
+                    {decision["underwear"] === true ? "Yes" : decision["underwear"] === false ? "No" : decision["underwear"]}
+                  </span>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+            <hr />
+
+            {/* Bra + Panties */}
+            <h5 className="text-center">Bra + Panties</h5>
+            <ListGroup variant="horizontal" className="justify-content-center mb-2">
+              {categoryDists("Clothing")[difficulty]["bra"].map((decision, idx) => (
+                <ListGroup.Item key={idx + 1} id={"clothing_bra_" + (idx + 1)}>
+                  <Badge bg={CategoryCode["Clothing"]} className="me-2">
+                    {decision.min == decision.max ? decision.min : decision.min + "-" + decision.max}
+                  </Badge>
+                  <span className="float-end">
+                    {decision["bra"] === true ? "Yes" : decision["bra"] === false ? "No" : decision["bra"]}
+                  </span>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+
+            <ListGroup variant="horizontal" className="justify-content-center">
+              {categoryDists("Clothing")[difficulty]["panties"].map((decision, idx) => (
+                <ListGroup.Item key={idx + 1} id={"clothing_panties_" + (idx + 1)}>
+                  <Badge bg={CategoryCode["Clothing"]} className="me-2">
+                    {decision.min == decision.max ? decision.min : decision.min + "-" + decision.max}
+                  </Badge>
+                  <span className="float-end">
+                    {decision["panties"] === true ? "Yes" : decision["panties"] === false ? "No" : decision["panties"]}
+                  </span>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+            <hr />
+
+            {/* Top */}
+            <h5 className="text-center">Top</h5>
+            <ListGroup variant="horizontal" className="justify-content-center">
+              {categoryDists("Clothing")[difficulty]["top"].map((decision, idx) => (
+                <ListGroup.Item key={idx + 1} id={"clothing_top_" + (idx + 1)}>
+                  <Badge bg={CategoryCode["Clothing"]} className="me-2">
+                    {decision.min == decision.max ? decision.min : decision.min + "-" + decision.max}
+                  </Badge>
+                  <span className="float-end">
+                    {decision["top"] === true ? "Yes" : decision["top"] === false ? "No" : decision["top"]}
+                  </span>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+            <hr />
+
+            {/* Bottom */}
+            <h5 className="text-center">Bottom</h5>
+            <ListGroup variant="horizontal" className="justify-content-center">
+              {categoryDists("Clothing")[difficulty]["bottom"].map((decision, idx) => (
+                <ListGroup.Item key={idx + 1} id={"clothing_bottom_" + (idx + 1)}>
+                  <Badge bg={CategoryCode["Clothing"]} className="me-2">
+                    {decision.min == decision.max ? decision.min : decision.min + "-" + decision.max}
+                  </Badge>
+                  <span className="float-end">
+                    {decision["bottom"] === true ? "Yes" : decision["bottom"] === false ? "No" : decision["bottom"]}
+                  </span>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+            <hr />
+
+            {/* Limbs */}
+            <h5 className="text-center">Limbs</h5>
+            <ListGroup variant="horizontal" className="justify-content-center">
+              {categoryDists("Clothing")[difficulty]["limbs"].map((decision, idx) => (
+                <ListGroup.Item key={idx + 1} id={"clothing_limbs_" + (idx + 1)}>
+                  <Badge bg={CategoryCode["Clothing"]} className="me-2">
+                    {decision.min == decision.max ? decision.min : decision.min + "-" + decision.max}
+                  </Badge>
+                  <span className="float-end">
+                    {decision["limbs"] === true ? "Yes" : decision["limbs"] === false ? "No" : decision["limbs"]}
+                  </span>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </Card.Body>
+          <Card.Footer className="text-center">
+            <Button
+              id={"roll_clothing"}
+              type="button"
+              variant="feminization"
+              className="w-50 fw-bold"
+              onClick={(e) => handleRoll("Clothing", difficulty)}
+            >
+              Roll
+            </Button>
+          </Card.Footer>
+        </Card>
+      </Col>
+    </Row>
+  )
 }
 
 export function RouletteCard({ category, difficulty }) {
@@ -176,11 +291,9 @@ function handleRoll(category, difficulty) {
 
 function rollAll(difficulty) {
   handleRoll("Buttplug", difficulty);
-  handleRoll("Underwear", difficulty);
-  handleRoll("Outfit", difficulty);
+  handleRoll("Clothing", difficulty);
   handleRoll("BDSM", difficulty);
-  handleRoll("Wrists", difficulty);
-  handleRoll("Ankles", difficulty);
+  handleRoll("Bondage", difficulty);
 }
 
 function resetRoll(category) {
@@ -193,9 +306,7 @@ function resetRoll(category) {
 
 function resetAll() {
   resetRoll("Buttplug");
-  resetRoll("Underwear");
-  resetRoll("Outfit");
+  resetRoll("Clothing");
   resetRoll("BDSM");
-  resetRoll("Wrists");
-  resetRoll("Ankles");
+  resetRoll("Bondage");
 }

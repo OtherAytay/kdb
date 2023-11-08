@@ -22,28 +22,36 @@ function rollButtplug(difficulty=default_difficulty) {
     return result
 }
 
-function rollUnderwear(difficulty=default_difficulty) {
-    var rollUpper = r10()
-    var result = [{rollType: "Upper", roll: rollUpper, decision: findDecision(underwear[difficulty]["upper"], rollUpper)["upper"]}]
+function rollClothing(difficulty=default_difficulty) {
+    const category = "Clothing"
     
-    var rollLower = r10()
-    result.push({rollType: "Lower", roll: rollLower, decision: findDecision(underwear[difficulty]["lower"], rollLower)["lower"]})
-    
-    if (consoleOutput) {printResult("Underwear", result)}
-    return result
-}
+    var rollUnderwear = r10()
+    var result = [getDecisionObj(category, difficulty, "underwear", rollUnderwear)]
 
-function rollOutfit(difficulty=default_difficulty) {
-    var rollTop = r10()
-    var result = [{rollType: "Top", roll: rollTop, decision: findDecision(outfit[difficulty]["top"], rollTop)["top"]}]
+    if (result[0].decision == "Bra + Panties") {
+        var rollBra = r10()
+        result.push(getDecisionObj(category, difficulty, "bra", rollBra))
 
-    var rollBottom = r10()
-    result.push({rollType: "Bottom", roll: rollBottom, decision: findDecision(outfit[difficulty]["bottom"], rollBottom)["bottom"]})
+        var rollPanties = r10()
+        result.push(getDecisionObj(category, difficulty, "panties", rollPanties))
 
-    var rollLimbs = r10()
-    result.push({rollType: "Limbs", roll: rollLimbs, decision: findDecision(outfit[difficulty]["limbs"], rollLimbs)["limbs"]})
+        var rollTop = r10()
+        result.push(getDecisionObj(category, difficulty, "top", rollTop))
 
-    if (consoleOutput) {printResult("Outfit", result)}
+        var rollBottom = r10()
+        result.push(getDecisionObj(category, difficulty, "bottom", rollBottom))
+
+        var rollLimbs = r10()
+        result.push(getDecisionObj(category, difficulty, "limbs", rollLimbs))
+    } else if (result[0].decision == "Bodysuit") {
+        var rollBottom = r10()
+        result.push(getDecisionObj(category, difficulty, "bottom", rollBottom))
+
+        var rollLimbs = r10()
+        result.push(getDecisionObj(category, difficulty, "limbs", rollLimbs))
+    }
+
+    if (consoleOutput) {printResult("Clothing", result)}
     return result
 }
 
@@ -73,27 +81,11 @@ function rollBDSM(difficulty=default_difficulty) {
     return result
 }
 
-function rollWrists(difficulty=default_difficulty) {
-    var rollUse = r10()
-    var result = [{rollType: "Use", roll: rollUse, decision: findDecision(wrists[difficulty]["use"], rollUse)["use"]}]
-    if (result[0].decision) {
-        var rollBinding = r10()
-        result.push({rollType: "Binding", roll: rollBinding, decision: findDecision(wrists[difficulty]["binding"], rollBinding)["binding"]})
-    }
+function rollBondage(difficulty=default_difficulty) {
+    var rollBinding = r10()
+    var result = [getDecisionObj("Bondage", difficulty, "binding", rollBinding)]
 
     if (consoleOutput) {printResult("Wrists", result)}
-    return result
-}
-
-function rollAnkles(difficulty=default_difficulty) {
-    var rollUse = r10()
-    var result = [{rollType: "Use", roll: rollUse, decision: findDecision(ankles[difficulty]["use"], rollUse)["use"]}]
-    if (result[0].decision) {
-        var rollBinding = r10()
-        result.push({rollType: "Binding", roll: rollBinding, decision: findDecision(ankles[difficulty]["binding"], rollBinding)["binding"]})
-    }
-
-    if (consoleOutput) {printResult("Ankles", result)}
     return result
 }
 
@@ -105,6 +97,10 @@ function findDecision(decisionSet, roll) {
             return decision
         }
     }
+}
+
+function getDecisionObj(category, difficulty, rollType, roll) {
+    return {rollType: rollType, roll: roll, decision: findDecision(categoryDists(category)[difficulty][rollType], roll)[rollType]}
 }
 
 function printResult(category, result) {
@@ -184,135 +180,125 @@ export const buttplug = {
     }
 }
 
-export const underwear = {
+export const clothing = {
     easy: {
-        upper: [
-            { min: 1, max: 8, upper: "Bra" }, // 80%
-            { min: 9, max: 10, upper: "Padded Bra" } // 20%
+        underwear: [
+            {min: 1, max: 9, underwear: "Bra + Panties"},
+            {min: 10, max: 10, underwear: "Bodysuit"}
         ],
-        lower: [
-            { min: 1, max: 8, lower: "Panties" }, // 80%
-            { min: 9, max: 10, lower: "Thong" } // 20%
-        ]
-    },
+        bra: [
+            {min: 1, max: 8, bra: "Any Bra"},
+            {min: 9, max: 10, bra: "Padded Bra"},
+        ],
+        panties: [
+            {min: 1, max: 8, panties: "Any Panties"},
+            {min: 9, max: 10, panties: "Thong"},
+        ],
+        top: [
+            {min: 1, max: 5, top: "None"},
+            {min: 6, max: 10, top: "T-shirt"},
+        ],
+        bottom: [
+            {min: 1, max: 4, bottom: "None"},
+            {min: 5, max: 7, bottom: "Shorts"},
+            {min: 8, max: 10, bottom: "Skirt"},
+        ],
+        limbs: [
+            {min: 1, max: 4, limbs: "None"},
+            {min: 5, max: 8, limbs: "Thigh High Socks"},
+            {min: 9, max: 10, limbs: "Thigh High Socks + Arm Gloves"},
+        ],
+    },    
     medium: {
-        upper: [
-            { min: 1, max: 5, upper: "Bra" }, // 50%
-            { min: 6, max: 8, upper: "Padded Bra" }, // 30%
-            { min: 9, max: 9, upper: "Sports Bra"}, // 10%
-            { min: 10, max: 10, upper: "Rope Harness"} // 10%
+        underwear: [
+            {min: 1, max: 7, underwear: "Bra + Panties"},
+            {min: 8, max: 9, underwear: "Bodysuit"},
+            {min: 10, max: 10, underwear: "Rope Harness"},
         ],
-        lower: [
-            { min: 1, max: 5, lower: "Panties" }, // 50%
-            { min: 6, max: 9, lower: "Thong" }, // 40%
-            { min: 10, max: 10, lower: "Rope Harness"} // 10%
-        ]
+        bra: [
+            {min: 1, max: 7, bra: "Any Bra"},
+            {min: 8, max: 9, bra: "Padded Bra"},
+            {min: 10, max: 10, bra: "Sports Bra"},
+        ],
+        panties: [
+            {min: 1, max: 5, panties: "Any Panties"},
+            {min: 6, max: 10, panties: "Thong"},
+        ],
+        top: [
+            {min: 1, max: 5, top: "None"},
+            {min: 6, max: 10, top: "T-shirt"},
+        ],
+        bottom: [
+            {min: 1, max: 3, bottom: "None"},
+            {min: 4, max: 6, bottom: "Shorts"},
+            {min: 7, max: 9, bottom: "Skirt"},
+            {min: 10, max: 10, bottom: "Tight Athletic Shorts"},
+        ],
+        limbs: [
+            {min: 1, max: 3, limbs: "None"},
+            {min: 4, max: 8, limbs: "Thigh High Socks"},
+            {min: 9, max: 10, limbs: "Thigh High Socks + Arm Gloves"},
+        ],
     },
     hard: {
-        upper: [
-            { min: 1, max: 3, upper: "Bra" }, // 30%
-            { min: 4, max: 5, upper: "Padded Bra" }, // 20%
-            { min: 6, max: 7, upper: "Sports Bra"}, // 20%
-            { min: 8, max: 10, upper: "Rope Harness"} // 30%
+        underwear: [
+            {min: 1, max: 6, underwear: "Bra + Panties"},
+            {min: 7, max: 8, underwear: "Bodysuit"},
+            {min: 9, max: 10, underwear: "Rope Harness"},
         ],
-        lower: [
-            { min: 1, max: 3, lower: "Panties" }, // 30%
-            { min: 4, max: 7, lower: "Thong" }, // 40%
-            { min: 8, max: 10, lower: "Rope Harness"} // 30%
-            
-        ]
+        bra: [
+            {min: 1, max: 4, bra: "Any Bra"},
+            {min: 5, max: 7, bra: "Padded Bra"},
+            {min: 8, max: 10, bra: "Sports Bra"},
+        ],
+        panties: [
+            {min: 1, max: 3, panties: "Any Panties"},
+            {min: 4, max: 10, panties: "Thong"},
+        ],
+        top: [
+            {min: 1, max: 3, top: "None"},
+            {min: 4, max: 10, top: "T-shirt"},
+        ],
+        bottom: [
+            {min: 1, max: 2, bottom: "None"},
+            {min: 3, max: 5, bottom: "Shorts"},
+            {min: 6, max: 8, bottom: "Skirt"},
+            {min: 9, max: 10, bottom: "Tight Athletic Shorts"},
+        ],
+        limbs: [
+            {min: 1, max: 2, limbs: "None"},
+            {min: 4, max: 7, limbs: "Thigh High Socks"},
+            {min: 8, max: 10, limbs: "Thigh High Socks + Arm Gloves"},
+        ],
     },
     extreme: {
-        upper: [
-            { min: 1, max: 1, upper: "Bra" }, // 10%
-            { min: 2, max: 3, upper: "Padded Bra" }, // 20%
-            { min: 4, max: 5, upper: "Sports Bra"}, // 20%
-            { min: 6, max: 10, upper: "Rope Harness"} // 50%
+        underwear: [
+            {min: 1, max: 4, underwear: "Bra + Panties"},
+            {min: 5, max: 6, underwear: "Bodysuit"},
+            {min: 7, max: 10, underwear: "Rope Harness"},
         ],
-        lower: [
-            { min: 1, max: 1, lower: "Panties" }, // 10%
-            { min: 2, max: 5, lower: "Thong" }, // 40%
-            { min: 6, max: 10, lower: "Rope Harness"} // 50%
-            
-        ]
-    },
-}
-
-export const outfit = {
-    easy: {
+        bra: [
+            {min: 1, max: 1, bra: "Any Bra"},
+            {min: 2, max: 6, bra: "Padded Bra"},
+            {min: 7, max: 10, bra: "Sports Bra"},
+        ],
+        panties: [
+            {min: 1, max: 10, panties: "Thong"},
+        ],
         top: [
-            { min: 1, max: 4, top: "None"}, // 40%
-            { min: 5, max: 9, top: "T-shirt"}, // 50%
-            { min: 10, max: 10, top: "Bodysuit"} // 10%
+            {min: 1, max: 2, top: "None"},
+            {min: 3, max: 10, top: "T-shirt"},
         ],
         bottom: [
-            { min: 1, max: 4, bottom: "None"}, // 40%
-            { min: 5, max: 7, bottom: "Shorts"}, // 30%
-            { min: 8, max: 9, bottom: "Skirt"}, // 20%
-            { min: 10, max: 10, bottom: "Athletic Tight Shorts"}, // 10%
+            {min: 1, max: 1, bottom: "None"},
+            {min: 2, max: 4, bottom: "Shorts"},
+            {min: 5, max: 7, bottom: "Skirt"},
+            {min: 8, max: 10, bottom: "Tight Athletic Shorts"},
         ],
         limbs: [
-            { min: 1, max: 4, limbs: "None"}, // 40%
-            { min: 5, max: 6, limbs: "Thigh High Socks"}, // 20%
-            { min: 7, max: 8, limbs: "Arm Gloves"}, // 20%
-            { min: 9, max: 10, limbs: "Thigh High Socks + Arm Gloves"}, // 20%
-        ]
-    },
-    medium: {
-        top: [
-            { min: 1, max: 3, top: "None"}, // 30%
-            { min: 4, max: 8, top: "T-shirt"}, // 50%
-            { min: 9, max: 10, top: "Bodysuit"} // 20%
+            {min: 1, max: 3, limbs: "Thigh High Socks"},
+            {min: 4, max: 10, limbs: "Thigh High Socks + Arm Gloves"},
         ],
-        bottom: [
-            { min: 1, max: 3, bottom: "None"}, // 30%
-            { min: 4, max: 6, bottom: "Shorts"}, // 30%
-            { min: 7, max: 9, bottom: "Skirt"}, // 30%
-            { min: 10, max: 10, bottom: "Athletic Tight Shorts"}, // 10%
-        ],
-        limbs: [
-            { min: 1, max: 3, limbs: "None"}, // 30%
-            { min: 4, max: 5, limbs: "Thigh High Socks"}, // 20%
-            { min: 6, max: 7, limbs: "Arm Gloves"}, // 20%
-            { min: 8, max: 10, limbs: "Thigh High Socks + Arm Gloves"}, // 30%
-        ]
-    },
-    hard: {
-        top: [
-            { min: 1, max: 2, top: "None"}, // 20%
-            { min: 3, max: 7, top: "T-shirt"}, // 50%
-            { min: 8, max: 10, top: "Bodysuit"} // 30%
-        ],
-        bottom: [
-            { min: 1, max: 2, bottom: "None"}, // 20%
-            { min: 3, max: 5, bottom: "Shorts"}, // 30%
-            { min: 6, max: 8, bottom: "Skirt"}, // 30%
-            { min: 9, max: 10, bottom: "Athletic Tight Shorts"}, // 20%
-        ],
-        limbs: [
-            { min: 1, max: 2, limbs: "None"}, // 20%
-            { min: 3, max: 4, limbs: "Thigh High Socks"}, // 20%
-            { min: 5, max: 6, limbs: "Arm Gloves"}, // 20%
-            { min: 7, max: 10, limbs: "Thigh High Socks + Arm Gloves"}, // 40%
-        ]
-    },
-    extreme: {
-        top: [
-            { min: 1, max: 1, top: "None"}, // 10%
-            { min: 2, max: 6, top: "T-shirt"}, // 50%
-            { min: 7, max: 10, top: "Bodysuit"} // 40%
-        ],
-        bottom: [
-            { min: 1, max: 1, bottom: "None"}, // 10%
-            { min: 2, max: 4, bottom: "Shorts"}, // 30%
-            { min: 5, max: 7, bottom: "Skirt"}, // 30%
-            { min: 8, max: 10, bottom: "Athletic Tight Shorts"}, // 30%
-        ],
-        limbs: [
-            { min: 1, max: 2, limbs: "Thigh High Socks"}, // 20%
-            { min: 3, max: 4, limbs: "Arm Gloves"}, // 20%
-            { min: 5, max: 10, limbs: "Thigh High Socks + Arm Gloves"}, // 60%
-        ]
     }
 }
 
@@ -373,91 +359,36 @@ export const bdsm = {
     },
 }
 
-export const wrists = {
+export const bondage = {
     easy: {
-        use: [
-            { min: 1, max: 5, use: false }, // 50%
-            { min: 6, max: 10, use: true } // 50%
-        ],
         binding: [
             { min: 1, max: 5, binding: "None" }, // 50%
-            { min: 6, max: 10, binding: "Together in Front" } // 50%
+            { min: 6, max: 10, binding: "Wrists Together in Front, Ankles Together" } // 50%
         ]
     },
     medium: {
-        use: [
-            { min: 1, max: 3, use: false }, // 30%
-            { min: 4, max: 10, use: true } // 70%
-        ],
         binding: [
             { min: 1, max: 3, binding: "None" }, // 30%
-            { min: 4, max: 8, binding: "Together in Front" }, // 50%
-            { min: 9, max: 10, binding: "Together in Back" } // 20%
+            { min: 4, max: 8, binding: "Wrists Together in Front, Ankles Together" }, // 50%
+            { min: 9, max: 10, binding: "Wrists To Collar, Ankles Together" } // 20%
+            
         ]
     },
     hard: {
-        use: [
-            { min: 1, max: 10, use: true } // 100%
-        ],
         binding: [
-            { min: 1, max: 5, binding: "Together in Front" }, // 50%
-            { min: 6, max: 8, binding: "Together in Back" }, // 30%
-            { min: 9, max: 10, binding: "To Collar" } // 20%
+            { min: 1, max: 2, binding: "None" }, // 20%
+            { min: 2, max: 5, binding: "Wrists Together in Front, Ankles Together" }, // 40%
+            { min: 6, max: 8, binding: "Wrists To Collar, Ankles Together" }, // 30%
+            { min: 9, max: 10, binding: "Wrists Together in Back, Ankles Together" } // 10%
         ]
     },
     extreme: {
-        use: [
-            { min: 1, max: 10, use: true } // 100%
-        ],
         binding: [
-            { min: 1, max: 2, binding: "Together in Front" }, // 20%
-            { min: 3, max: 4, binding: "Together in Back" }, // 20%
-            { min: 5, max: 6, binding: "To Collar" }, // 20%
-            { min: 7, max: 8, binding: "Together to Bed" }, // 20%
-            { min: 9, max: 10, binding: "Spread Eagle" }, // 20%
-        ]
-    },
-}
-
-export const ankles = {
-    easy: {
-        use: [
-            { min: 1, max: 5, use: false }, // 50%
-            { min: 6, max: 10, use: true } // 50%
-        ],
-        binding: [
-            { min: 1, max: 5, binding: "None" }, // 50%
-            { min: 6, max: 10, binding: "Together" } // 50%
-        ]
-    },
-    medium: {
-        use: [
-            { min: 1, max: 3, use: false }, // 30%
-            { min: 4, max: 10, use: true } // 70%
-        ],
-        binding: [
-            { min: 1, max: 3, binding: "None" }, // 30%
-            { min: 4, max: 10, binding: "Together" }, // 70%
-        ]
-    },
-    hard: {
-        use: [
-            { min: 1, max: 10, use: true } // 100%
-        ],
-        binding: [
-            { min: 1, max: 5, binding: "Together" }, // 50%
-            { min: 6, max: 8, binding: "Together to Bed" }, // 30%
-            { min: 9, max: 10, binding: "Spread Eagle" } // 20%
-        ]
-    },
-    extreme: {
-        use: [
-            { min: 1, max: 10, use: true } // 100%
-        ],
-        binding: [
-            { min: 1, max: 2, binding: "Together" }, // 20%
-            { min: 3, max: 6, binding: "Together to Bed" }, // 40%
-            { min: 7, max: 10, binding: "Spread Eagle" }, // 40%
+            { min: 1, max: 3, binding: "Wrists To Collar, Ankles Together" }, // 30%
+            { min: 4, max: 5, binding: "Wrists Together in Back, Ankles Together" }, // 20%
+            { min: 6, max: 7, binding: "Together to Bed" }, // 20%
+            { min: 8, max: 9, binding: "Spread Eagle" }, // 20%
+            { min: 10, max: 10, binding: "Hogtie" }, // 10%
         ]
     },
 }
@@ -465,21 +396,17 @@ export const ankles = {
 export function categoryDists(category) {
     switch (category) {
         case "Buttplug": return buttplug
-        case "Underwear": return underwear
-        case "Outfit": return outfit
+        case "Clothing": return clothing
         case "BDSM": return bdsm      
-        case "Wrists": return wrists
-        case "Ankles": return ankles    
+        case "Bondage": return bondage  
     }
 }
 
 export function rollCategory(category, difficulty=default_difficulty) {
     switch (category) {
         case "Buttplug": return rollButtplug(difficulty)
-        case "Underwear": return rollUnderwear(difficulty)
-        case "Outfit": return rollOutfit(difficulty)
+        case "Clothing": return rollClothing(difficulty)
         case "BDSM": return rollBDSM(difficulty)      
-        case "Wrists": return rollWrists(difficulty)
-        case "Ankles": return rollAnkles(difficulty)    
+        case "Bondage": return rollBondage(difficulty)      
     }
 }   
