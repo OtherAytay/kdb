@@ -1,20 +1,16 @@
 'use client'
-import Image from 'next/image'
 import { useEffect, useState } from 'react';
-import Button from 'react-bootstrap/Button'
-import ToggleButton from 'react-bootstrap/ToggleButton'
-import ButtonGroup from 'react-bootstrap/ButtonGroup'
-import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
-import Container from 'react-bootstrap/Container'
-import Card from 'react-bootstrap/Card'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Badge from 'react-bootstrap/Badge'
-import ListGroup from 'react-bootstrap/ListGroup'
-import dynamic from 'next/dynamic'
-import { categoryDists } from './roulette.js'
-import { rollCategory } from './roulette.js'
-import { Accordion } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Container from 'react-bootstrap/Container';
+import Card from 'react-bootstrap/Card';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Badge from 'react-bootstrap/Badge';
+import ListGroup from 'react-bootstrap/ListGroup';
+import { categoryDists } from './roulette.js';
+import { rollCategory } from './roulette.js';
 
 export default function Home() {
   const [difficulty, setDifficulty] = useState('easy');

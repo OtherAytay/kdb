@@ -16,7 +16,7 @@ const inter = Inter({ subsets: ['latin'] })
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={"vh-100 "}>
+      <body >
         {NavLayout()}
         {children}
       </body>
@@ -32,9 +32,9 @@ export function NavLayout() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav variant="pills" className="mx-auto" defaultActiveKey={usePathname()}>
-              <Nav.Link as={Link} href="/">Home</Nav.Link>
-              <Nav.Link as={Link} href="#create">Create</Nav.Link>
-              <Nav.Link as={Link} href="/night">Night</Nav.Link>
+              <Nav.Link className="fw-bold text-white" as={Link} href="/">Home</Nav.Link>
+              <Nav.Link className="fw-bold text-white" as={Link} href="/create">Create</Nav.Link>
+              <Nav.Link className="fw-bold text-white" as={Link} href="/night">Night</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
