@@ -129,8 +129,8 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                                 <div className="d-inline-flex w-100">
                                     <Form.Select className="me-2">
                                         <option>Select a brand</option>
-                                        {brands?.map((brand) => (
-                                            <option value={brand.id}>{brand.name}</option>
+                                        {brands?.map((brand, idx) => (
+                                            <option key={idx} value={brand.id}>{brand.name}</option>
                                         ))}
                                     </Form.Select>
                                     <Button variant="outline-secondary" onClick={() => setShowBrandModal(true)}>
