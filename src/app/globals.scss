@@ -8,16 +8,16 @@ $theme-colors: (
     "warning":#ffc107,
     "danger": #dc3545,
     "general": #0d6efd,
-    "material":#198754,
+    "property":#198754,
     "dimension": #fd7e14,
+    "feature": #6610f2,
     "sexuality": #fd7e14,
     "feminization": #d63384,
     "bdsm": #000000,
-    "feature": #6610f2,
     "easy": #50dc4b,
     "medium": #ffc107,
     "hard": #c80000,
     "extreme": #6d0000
 );
 
-@import '/node_modules/bootstrap/scss/bootstrap.scss'
+@import '../../node_modules/bootstrap/scss/bootstrap.scss'
