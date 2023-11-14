@@ -207,14 +207,6 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                     <hr className="border border-general opacity-100" />
 
                     <Row>
-                        {/* Material */}
-                        <Col className="col-12 mb-2">
-                            <Form.Group controlId="material">
-                                <Form.Label>Material</Form.Label>
-                                <Form.Control type="text" placeholder="Silicone" />
-                            </Form.Group>
-                        </Col>
-
                         {/* Manufacturer Size */}
                         <Col className="col-12 col-md-6 mb-2">
                             <Form.Group controlId="mf_size">
@@ -660,10 +652,10 @@ async function createBrand(handleClose) {
 
     try {
         const id = await db.brand.add({
-            name: toDBName(name),
+            name: name,
             url: url,
             note: note,
-            rating: rating,
+            rating: parseInt(rating),
             rating_note: rating_note
         });
         handleClose()
@@ -739,6 +731,16 @@ async function createDimension(handleClose) {
     }
 }
 
+function imageToDataURL(image) {
+    const reader = new FileReader();
+
+    return new Promise((resolve, reject) => {
+        reader.onerror = () => {reader.abort(); reject(new DOMException("Problem converting image to DataURL"))}
+        reader.onloadend = () => { resolve(reader.result) }
+        reader.readAsDataURL(image)
+    })
+}
+
 async function createItem(category) {
     const general = document.forms['general']
 
@@ -747,12 +749,14 @@ async function createItem(category) {
     var brand_id = general['brand_id'].value
     var url = general['url'].value
     var image = general['image'].files[0]
+    if (image) {
+        image = await imageToDataURL(image)
+    }
     var price = general['price'].value
     var purchase_date = general['purchase_date'].value
     var description = general['description'].value
     var rating = general['rating'].value
     var rating_note = general['rating_note'].value
-    var material = general['material'].value
     var mf_size = general['mf_size'].value
     var mf_color = general['mf_color'].value
     var user_size = general['user_size'].value
@@ -770,21 +774,19 @@ async function createItem(category) {
         case "cosmetic": var store = db.cosmetic; break;
     }
 
-    console.log("yeet")
     db.transaction('rw', db.item, store, async () => {
         const item_id = await db.item.add({
             name: name,
             category: category,
-            brand_id: brand_id,
+            brand_id: parseInt(brand_id),
             description: description,
             url: url,
             image: image,
-            price: price,
+            price: parseFloat(price),
             currency: "$",
             purchase_date: purchase_date,
-            rating: rating,
+            rating: parseInt(rating),
             rating_note: rating_note,
-            material: material,
             mf_size: mf_size,
             mf_color: mf_color,
             user_size: user_size,
@@ -794,7 +796,7 @@ async function createItem(category) {
         var subitem = { item_id: item_id }
         properties.forEach((property) => subitem[property.key] = property.value)
         features.forEach((feature) => subitem[feature.key] = feature.value)
-        dimensions.forEach((dimension) => subitem[dimension.key] = dimension.value)
+        dimensions.forEach((dimension) => subitem[dimension.key] = parseFloat(dimension.value))
         const subitem_id = await store.add(subitem)
 
         const itemUpdate = await db.item.update(item_id, { subitem_id: subitem_id })

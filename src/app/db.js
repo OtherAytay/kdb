@@ -1,8 +1,8 @@
 import Dexie from 'dexie';
 
 export var db = new Dexie('KinkDB');
-db.delete().then() // PURGE DB FOR DEBUGGING
-db = new Dexie('KinkDB');
+// db.delete().then() // PURGE DB FOR DEBUGGING
+// db = new Dexie('KinkDB');
 db.version(1).stores({
   item: '++id, &name, category, brand_id, subitem_id', // description, url, image, purchase_date, price, currency, rating, rating_note, material, mf_size, mf_color, user_size, user_color
   brand: '++id, &name', // website_url, note, rating, rating_note
@@ -29,6 +29,11 @@ db.version(1).stores({
 });
 
 db.on("populate", (transaction) => {
+  // Example item + brand
+  transaction.item.add({id: 1, "name":"Neo Elite 7.5","category":"dildo","brand_id":1,"description":"","url":"https://blushvibe.com/products/neo-elite-neon-pink-7-5-inch-dildo-suction-cup-base-by-blush-bl-82200?variant=41964900188331","image":"","price":24.04,"currency":"$","purchase_date":"2023-11-14","rating":5,"rating_note":"Dual density firmness is very comfortable, comfortable intermediate size","mf_size":"","mf_color":"","user_size":"Medium","user_color":"Neon Pink","subitem_id": 1})
+  transaction.dildo.add({id: 1, "item_id":1,"material":"Silicone","appearance":"Realistic","texture":"Smooth","firmness":"Dual Density","alignment":"P-Spot","suction":true,"harnessable":true,"total_length":7.5,"insertable_length":7,"head_diameter":1.5,"body_diameter":1.5,"knot_diameter":null})
+  transaction.brand.add({id: 1, "name":"Blush","url":"https://blushvibe.com/","note":"","rating":4,"rating_note":"Cheap but respectable quality sex toys"})
+
   // Properties
   transaction.property.add({name: "type", description: "e.g. Collar, mouth gag, nipple toy", category: "bdsm", placeholder: "Chastity"})
   transaction.property.add({name: "subtype", description: "e.g. Ball gag, dildo gag, open gag", category: "bdsm", placeholder: "Bar gag"})
