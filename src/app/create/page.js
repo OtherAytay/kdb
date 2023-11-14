@@ -264,12 +264,16 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
 }
 
 export function CategorySpecificInfoCard({ setShowModal, category, property }) {
+    switch (property) {
+        case "property": var store = db.property; break;
+        case "feature": var store = db.feature; break;
+        case "dimension": var store = db.dimension; break
+    }
+    const categoryProps = useLiveQuery(() => store.where('category').equals(category).toArray(), [category])
     if (property == "property") {
-        const properties = useLiveQuery(() => db.property.where('category').equals(category).toArray(), [category])
-
         var propertyBody = (
             <Row>
-                {properties?.map((prop, idx) => (
+                {categoryProps?.map((prop, idx) => (
                     <Col key={idx} className="col-12 col-md-6 col-lg-12 mb-2">
                         <Form.Group controlId={property + "_" + prop.name}>
                             <Form.Label>{toDisplayName(prop.name)}</Form.Label>
@@ -282,8 +286,6 @@ export function CategorySpecificInfoCard({ setShowModal, category, property }) {
         )
 
     } else if (property == "feature") {
-        const features = useLiveQuery(() => db.feature.where('category').equals(category).toArray(), [category])
-
         var propertyBody = (
             <div>
                 <Row>
@@ -298,7 +300,7 @@ export function CategorySpecificInfoCard({ setShowModal, category, property }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {features?.map((feature, idx) => (
+                                {categoryProps?.map((feature, idx) => (
                                     <tr key={idx}>
                                         <td><Form.Check inline id={property + "_" + feature.name} type="checkbox" /></td>
                                         <td>{toDisplayName(feature.name)}</td>
@@ -312,11 +314,9 @@ export function CategorySpecificInfoCard({ setShowModal, category, property }) {
             </div>
         )
     } else {
-        const dimensions = useLiveQuery(() => db.dimension.where("category").equals(category).toArray(), [category])
-
         var propertyBody = (
             <div>
-                {dimensions?.map((dim, idx) => (
+                {categoryProps?.map((dim, idx) => (
                     <Form.Group key={idx} className="mb-2" controlId={property + "_" + dim.name}>
                         <Form.Label>{toDisplayName(dim.name)}</Form.Label>
                         <InputGroup>
