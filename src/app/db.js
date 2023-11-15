@@ -1,10 +1,8 @@
 import Dexie from 'dexie';
 
 export var db = new Dexie('KinkDB');
-// db.delete().then() // PURGE DB FOR DEBUGGING
-// db = new Dexie('KinkDB');
 db.version(1).stores({
-  item: '++id, &name, category, brand_id, subitem_id', // description, url, image, purchase_date, price, currency, rating, rating_note, material, mf_size, mf_color, user_size, user_color
+  item: '++id, &name, category, brand_id, subitem_id', // description, url, image, purchase_date, price, currency, rating, rating_note, mf_size, mf_color, user_size, user_color
   brand: '++id, &name', // website_url, note, rating, rating_note
   dildo: '++id, &item_id', // appearance, texture, firmness, alignment, balls, suction, vibration, thrusting, e_stim, battery_life, squirting, inflatable, vac_u_lock, harness_compatible, ovipositor, dimensions[total_length, insertable_length, head_diameter, shaft_diameter, feature_diameter], weight
   anal: '++id, &item_id', // base, texture, firmness, alignment, suction, tunnel, expanding, tail, vibration, thrusting, e_stim, power_source, battery_life, inflatable, vac_u_lock, lockable, harness_compatible, other_features, dimensions[total_length, insertable_length, head_diameter, shaft_diameter, feature_diameter], weight
@@ -13,11 +11,8 @@ db.version(1).stores({
   cosmetic: '++id, &item_id', // subtype, style,
 
   property: '++id, name, category, &[name+category]', // description, placeholder
-  property_item: '[property_id+item_id]', // value
   dimension: '++id, name, category, &[name+category]', // description
-  dimension_item: '[dimension_id+item_id]', // value, unit
   feature: '++id, name, category, &[name+category]', // description
-  feature_item: '[feature_id+item_id]', // value
   label_category: '++id, &name', // default_color, description
   label: '++id, &name, category_id', // color, description
   label_item: '[label_id+item_id]',
@@ -30,7 +25,7 @@ db.version(1).stores({
 
 db.on("populate", (transaction) => {
   // Example item + brand
-  transaction.item.add({id: 1, "name":"Neo Elite 7.5","category":"dildo","brand_id":1,"description":"","url":"https://blushvibe.com/products/neo-elite-neon-pink-7-5-inch-dildo-suction-cup-base-by-blush-bl-82200?variant=41964900188331","image":"","price":24.04,"currency":"$","purchase_date":"2023-11-14","rating":5,"rating_note":"Dual density firmness is very comfortable, comfortable intermediate size","mf_size":"","mf_color":"","user_size":"Medium","user_color":"Neon Pink","subitem_id": 1})
+  transaction.item.add({id: 1, "name":"Neo Elite 7.5","category":"dildo","brand_id":1,"description":"","url":"https://blushvibe.com/products/neo-elite-neon-pink-7-5-inch-dildo-suction-cup-base-by-blush-bl-82200?variant=41964900188331","image":"https://blushvibe.com/cdn/shop/files/dtaotuknzlk2vsexn25k_2048x2048.jpg?v=1699999049","price":24.04,"currency":"$","purchase_date":"2023-11-14","rating":5,"rating_note":"Dual density firmness is very comfortable, comfortable intermediate size","mf_size":"","mf_color":"","user_size":"Medium","user_color":"Neon Pink","subitem_id": 1})
   transaction.dildo.add({id: 1, "item_id":1,"material":"Silicone","appearance":"Realistic","texture":"Smooth","firmness":"Dual Density","alignment":"P-Spot","suction":true,"harnessable":true,"total_length":7.5,"insertable_length":7,"head_diameter":1.5,"body_diameter":1.5,"knot_diameter":null})
   transaction.brand.add({id: 1, "name":"Blush","url":"https://blushvibe.com/","note":"","rating":4,"rating_note":"Cheap but respectable quality sex toys"})
 
