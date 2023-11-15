@@ -323,7 +323,7 @@ export function CategorySpecificInfoCard({ setShowModal, category, property }) {
     }
 
     return (
-        <Card className={"h-100 border-" + property} style={{ 'max-height': "100vh" }}>
+        <Card className={"h-100 border-" + property} style={{ maxHeight: "100vh" }}>
             <Card.Header className={"text-center fs-4 text-" + property}>
                 {property == "property" ? "Properties" :
                     property == "feature" ? "Features" : "Dimensions"}
