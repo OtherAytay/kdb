@@ -3,9 +3,9 @@ import { db } from './db'
 import { Badge } from 'react-bootstrap'
 
 export function BrandLink({ id }) {
-  const brand = useLiveQuery(() => db.brand.get(id))
+  const brand = useLiveQuery(() => db.brand.get(id)) 
   if (!brand) { return }
-  return (<a className="text-decoration-none" target="blank_" rel="noopener noreferrer" href={brand.url}>{brand.name}</a>)
+  return (<a className="text-decoration-none text-primary-emphasis" target="blank_" rel="noopener noreferrer" href={brand.url}>{brand.name}</a>)
 }
 
 export function RatingBadge({rating}) {
