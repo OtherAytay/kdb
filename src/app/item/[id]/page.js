@@ -20,8 +20,7 @@ import { BrandLink, RatingBadge } from '@/app/components';
 import { categoryDisplayName, displayDate, toDisplayName } from '../../utilities';
 
 export default function Home({ params }) {
-    const [item, setItem] = useState()
-    fetchItem(parseInt(params.id), setItem)
+    const item = useLiveQuery(() => db.item.get(parseInt(params.id)))
 
     if (!item) { return }
 
@@ -137,24 +136,4 @@ export default function Home({ params }) {
 function propertyDisplayName(property) {
     var result = property.replace("property_", "").replace("feature_", "").replace("dimension_", "")
     return toDisplayName(result)
-}
-
-function fetchItem(id, setItem) {
-    var stores = [db.item, db.dildo, db.anal, db.bdsm, db.clothing, db.cosmetic]
-    var result = null
-
-    db.transaction('r', stores, async () => {
-        const item = await db.item.get(id)
-
-        switch (item.category) {
-            case "dildo": var store = db.dildo; break;
-            case "anal": var store = db.anal; break;
-            case "bdsm": var store = db.bdsm; break;
-            case "clothing": var store = db.clothing; break;
-            case "cosmetic": var store = db.cosmetic; break;
-        }
-
-        const subitem = await store.get(item.subitem_id)
-        result = ({ ...item, ...subitem })
-    }).then(() => setItem(result))
 }

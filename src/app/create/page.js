@@ -736,7 +736,7 @@ function imageToDataURL(image) {
     const reader = new FileReader();
 
     return new Promise((resolve, reject) => {
-        reader.onerror = () => {reader.abort(); reject(new DOMException("Problem converting image to DataURL"))}
+        reader.onerror = () => { reader.abort(); reject(new DOMException("Problem converting image to DataURL")) }
         reader.onloadend = () => { resolve(reader.result) }
         reader.readAsDataURL(image)
     })
@@ -767,41 +767,29 @@ async function createItem(category) {
     const features = [...document.querySelectorAll("[id^=feature_]")].map((field) => { return field.checked ? { key: field.id.replace("feature_", ""), value: field.checked } : null }).filter((obj) => obj != null)
     const dimensions = [...document.querySelectorAll("[id^=dimension_]")].map((field) => { return { key: field.id.replace("dimension_", ""), value: field.value } })
 
-    switch (category) {
-        case "dildo": var store = db.dildo; break;
-        case "anal": var store = db.anal; break;
-        case "bdsm": var store = db.bdsm; break;
-        case "clothing": var store = db.clothing; break;
-        case "cosmetic": var store = db.cosmetic; break;
+    item = {
+        name: name,
+        category: category,
+        brand_id: parseInt(brand_id),
+        description: description,
+        url: url,
+        image: image,
+        price: parseFloat(price),
+        currency: "$",
+        purchase_date: purchase_date,
+        rating: parseInt(rating),
+        rating_note: rating_note,
+        mf_size: mf_size,
+        mf_color: mf_color,
+        user_size: user_size,
+        user_color: user_color,
     }
 
-    db.transaction('rw', db.item, store, async () => {
-        const item_id = await db.item.add({
-            name: name,
-            category: category,
-            brand_id: parseInt(brand_id),
-            description: description,
-            url: url,
-            image: image,
-            price: parseFloat(price),
-            currency: "$",
-            purchase_date: purchase_date,
-            rating: parseInt(rating),
-            rating_note: rating_note,
-            mf_size: mf_size,
-            mf_color: mf_color,
-            user_size: user_size,
-            user_color: user_color
-        })
+    properties.forEach((property) => item["property_" + property.key] = property.value)
+    features.forEach((feature) => item["feature_" + feature.key] = feature.value)
+    dimensions.forEach((dimension) => item["dimension_" + dimension.key] = parseFloat(dimension.value))
 
-        var subitem = { item_id: item_id }
-        properties.forEach((property) => subitem["property_" + property.key] = property.value)
-        features.forEach((feature) => subitem["feature_" + feature.key] = feature.value)
-        dimensions.forEach((dimension) => subitem["dimension_" + dimension.key] = parseFloat(dimension.value))
-        const subitem_id = await store.add(subitem)
-
-        const itemUpdate = await db.item.update(item_id, { subitem_id: subitem_id })
-    }).then(() => console.log("Item created")).catch((err) => console.error(err.stack))
+    await db.item.add({ item })
 }
 
 const categorySelect = [
