@@ -16,6 +16,8 @@ import {
 } from 'react-bootstrap'
 import { db } from './db'
 import 'bootstrap-icons/font/bootstrap-icons.css'
+import { BrandLink } from '@/app/components';
+import { categoryDisplayName, displayDate } from './utilities';
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -42,12 +44,12 @@ export default function Home() {
                     <InputGroup.Text>Action</InputGroup.Text>
                     <Form.Select>
                       <option></option>
-                      <option>Delete</option>
-                      <option>Export</option>
-                      <option>Add Label</option>
-                      <option>Remove Label</option>
-                      <option>Add to Group</option>
-                      <option>Remove from Group</option>
+                      <option value="delete">Delete</option>
+                      <option value="export">Export</option>
+                      <option value="add_label">Add Label</option>
+                      <option value="remove_label">Remove Label</option>
+                      <option value="add_group">Add to Group</option>
+                      <option value="remove_group">Remove from Group</option>
                     </Form.Select>
                     <Button variant="primary">Go</Button>
                   </InputGroup>
@@ -167,17 +169,11 @@ export function ItemRow({ item }) {
       <td>{description ? description : <Badge bg="danger">None</Badge>}</td>
       <td>{rating}</td>
       <td>{item.currency}{item.price}</td>
-      <td>{(new Date(item.purchase_date)).toLocaleDateString().slice(0, 10)}</td>
+      <td>{displayDate(item.purchase_date)}</td>
       <td>{item.user_size}</td>
       <td>{item.user_color}</td>
     </tr>
   )
-}
-
-export function BrandLink({ id }) {
-  const brand = useLiveQuery(() => db.brand.get(id))
-  if (!brand) { return }
-  return (<a className="text-decoration-none" target="blank_" rel="noopener noreferrer" href={brand.url}>{brand.name}</a>)
 }
 
 export function ItemCard({ item }) {
@@ -230,13 +226,5 @@ function fetchItems(setItems) {
       results.push({ ...item, ...subitem })
     }
   }).then(() => setItems(results))
-}
-
-const categoryDisplayName = {
-  "dildo": "Dildo",
-  "anal": "Anal Toy",
-  "bdsm": "BDSM Gear",
-  "clothing": "Clothing",
-  "cosmetic": "Cosmetic",
 }
 

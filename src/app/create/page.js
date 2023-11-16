@@ -16,6 +16,7 @@ import {
 } from 'react-bootstrap';
 import { db } from '../db';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { toDBName, toDisplayName } from '../utilities';
 
 export default function Home() {
     const [showBrandModal, setShowBrandModal] = useState(false);
@@ -794,21 +795,13 @@ async function createItem(category) {
         })
 
         var subitem = { item_id: item_id }
-        properties.forEach((property) => subitem[property.key] = property.value)
-        features.forEach((feature) => subitem[feature.key] = feature.value)
-        dimensions.forEach((dimension) => subitem[dimension.key] = parseFloat(dimension.value))
+        properties.forEach((property) => subitem["property_" + property.key] = property.value)
+        features.forEach((feature) => subitem["feature_" + feature.key] = feature.value)
+        dimensions.forEach((dimension) => subitem["dimension_" + dimension.key] = parseFloat(dimension.value))
         const subitem_id = await store.add(subitem)
 
         const itemUpdate = await db.item.update(item_id, { subitem_id: subitem_id })
     }).then(() => console.log("Item created")).catch((err) => console.error(err.stack))
-}
-
-function toDBName(displayName) {
-    return displayName.trim().replaceAll(" ", "_").replaceAll("-", "_").toLowerCase()
-}
-
-function toDisplayName(dbName) {
-    return dbName.trim().replaceAll("_", " ").split(" ").map((word) => word.slice(0, 1).toUpperCase() + word.slice(1)).join(' ')
 }
 
 const categorySelect = [
