@@ -26,7 +26,7 @@ db.version(1).stores({
 db.on("populate", (transaction) => {
   // Example item + brand
   transaction.item.add({id: 1, "name":"Neo Elite 7.5","category":"dildo","brand_id":1,"description":"","url":"https://blushvibe.com/products/neo-elite-neon-pink-7-5-inch-dildo-suction-cup-base-by-blush-bl-82200?variant=41964900188331","image":"https://blushvibe.com/cdn/shop/files/dtaotuknzlk2vsexn25k_2048x2048.jpg?v=1699999049","price":24.04,"currency":"$","purchase_date":"2023-11-14","rating":5,"rating_note":"Dual density firmness is very comfortable, comfortable intermediate size","mf_size":"","mf_color":"","user_size":"Medium","user_color":"Neon Pink","subitem_id": 1})
-  transaction.dildo.add({id: 1, "item_id":1,"material":"Silicone","appearance":"Realistic","texture":"Smooth","firmness":"Dual Density","alignment":"P-Spot","suction":true,"harnessable":true,"total_length":7.5,"insertable_length":7,"head_diameter":1.5,"body_diameter":1.5,"knot_diameter":null})
+  transaction.dildo.add({id: 1, "item_id":1,"property_material":"Silicone","property_appearance":"Realistic","property_texture":"Smooth","property_firmness":"Dual Density","property_alignment":"P-Spot","feature_suction":true,"feature_harnessable":true,"dimension_total_length":7.5,"dimension_insertable_length":7,"dimension_head_diameter":1.5,"dimension_body_diameter":1.5,"dimension_knot_diameter":null})
   transaction.brand.add({id: 1, "name":"Blush","url":"https://blushvibe.com/","note":"","rating":4,"rating_note":"Cheap but respectable quality sex toys"})
 
   // Properties
