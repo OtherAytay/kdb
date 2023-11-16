@@ -17,6 +17,7 @@ import {
 import { db } from '../db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { toDBName, toDisplayName } from '../utilities';
+import { redirect, useRouter } from 'next/navigation';
 
 export default function Home() {
     const [showBrandModal, setShowBrandModal] = useState(false);
@@ -24,6 +25,7 @@ export default function Home() {
     const [showFeatureModal, setShowFeatureModal] = useState(false)
     const [showDimensionModal, setShowDimensionModal] = useState(false)
     const [category, setCategory] = useState("dildo")
+    const router = useRouter()
 
     // Prefetch related
     const brands = useLiveQuery(() => db.brand.toArray())
@@ -50,14 +52,12 @@ export default function Home() {
                 </Row>
                 <Row>
                     <Col className="text-center mb-2">
-                        <Button variant="primary" size="lg" className="w-100 fw-bold" onClick={() => createItem(category)}>
+                        <Button variant="primary" size="lg" className="w-100 fw-bold" onClick={() => createItem(category, () => router.push('/'))}>
                             Create Item
                         </Button>
                     </Col>
                 </Row>
             </Container>
-
-
 
             {/* Foreign Model Creation Modals */}
             <CreateBrandModal brands={brands?.map((b) => b.name)} show={showBrandModal} handleClose={() => setShowBrandModal(false)} />
@@ -742,7 +742,7 @@ function imageToDataURL(image) {
     })
 }
 
-async function createItem(category) {
+async function createItem(category, callback) {
     const general = document.forms['general']
 
     var name = general['item_name'].value
@@ -767,17 +767,17 @@ async function createItem(category) {
     const features = [...document.querySelectorAll("[id^=feature_]")].map((field) => { return field.checked ? { key: field.id.replace("feature_", ""), value: field.checked } : null }).filter((obj) => obj != null)
     const dimensions = [...document.querySelectorAll("[id^=dimension_]")].map((field) => { return { key: field.id.replace("dimension_", ""), value: field.value } })
 
-    item = {
+    var item = {
         name: name,
         category: category,
-        brand_id: parseInt(brand_id),
+        brand_id: parseInt(brand_id) || "null",
         description: description,
         url: url,
         image: image,
-        price: parseFloat(price),
+        price: parseFloat(price) || "",
         currency: "$",
         purchase_date: purchase_date,
-        rating: parseInt(rating),
+        rating: parseInt(rating) || "",
         rating_note: rating_note,
         mf_size: mf_size,
         mf_color: mf_color,
@@ -789,7 +789,8 @@ async function createItem(category) {
     features.forEach((feature) => item["feature_" + feature.key] = feature.value)
     dimensions.forEach((dimension) => item["dimension_" + dimension.key] = parseFloat(dimension.value))
 
-    await db.item.add({ item })
+    await db.item.add(item)
+    callback()
 }
 
 const categorySelect = [

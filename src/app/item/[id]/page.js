@@ -13,7 +13,8 @@ import {
     OverlayTrigger,
     Popover,
     ListGroup,
-    ListGroupItem
+    ListGroupItem,
+    Placeholder
 } from 'react-bootstrap'
 import { db } from '../../db'
 import { BrandLink, RatingBadge } from '@/app/components';
@@ -39,13 +40,13 @@ export default function Home({ params }) {
             </Row>
             <Row className="g-2">
                 <Col className="col-6 col-xl-4 d-flex align-items-center">
-                    <img className="rounded ratio ratio-1x1" src={item.image} />
+                    {item.image ? <img className="rounded ratio ratio-1x1" src={item.image}/> : <Placeholder as="img"/>}
                 </Col>
                 <Col className="col-6 col-xl-8">
                     <Card className="border-general">
                         <Card.Header className="text-center">
                             <Card.Title className="text-general fs-4 fw-semibold">{item.name}</Card.Title>
-                            <Card.Subtitle>{categoryDisplayName[item.category]} By <BrandLink id={item.brand_id}></BrandLink></Card.Subtitle>
+                            <Card.Subtitle>{categoryDisplayName[item.category]} By {item.brand_id ? <BrandLink id={item.brand_id}/> : null}</Card.Subtitle>
                         </Card.Header>
                         <Card.Body className="text-center">
                             <p>Purchased on <span className="text-general">{displayDate(item.purchase_date)}</span> for <span className="text-success">{item.currency}{item.price}</span></p>

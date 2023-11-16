@@ -1,5 +1,5 @@
 'use client'
-import { BrandLink } from '@/app/components';
+import { BrandLink, RatingBadge } from '@/app/components';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useState } from 'react';
@@ -88,11 +88,11 @@ export default function Home() {
                       <OverlayTrigger
                         placement='left'
                         overlay={<Tooltip className="opacity-100">Import another database to <span className="text-danger">add</span> to the existing one</Tooltip>}>
-                        <Dropdown.Item onClick={() => {setImportType("db_add") ; setShowImportModal(true)}}>Import DB into DB</Dropdown.Item>
+                        <Dropdown.Item disabled onClick={() => {setImportType("db_add") ; setShowImportModal(true)}}>Import DB into DB</Dropdown.Item>
                       </OverlayTrigger>
                       <OverlayTrigger
                         placement='left'
-                        overlay={<Tooltip className="opacity-100">Import another database to <span className="text-danger">add</span> to the existing one</Tooltip>}>
+                        overlay={<Tooltip className="opacity-100">Import items to <span className="text-danger">add</span> to the existing database</Tooltip>}>
                         <Dropdown.Item onClick={() => {setImportType("items_add") ; setShowImportModal(true)}}>Import Items into DB</Dropdown.Item>
                       </OverlayTrigger>
                       <OverlayTrigger
@@ -209,7 +209,7 @@ export function ItemList({ items, handleSelect }) {
   if (items.length == 0) { return }
 
   return (
-    <Table striped bordered hover responsive className="text-center text-nowrap">
+    <Table striped bordered responsive className="text-center text-nowrap">
       <thead>
         <tr>
           <td></td>
@@ -246,7 +246,7 @@ export function ItemRow({ item, handleSelect }) {
 
   const rating = (
     <OverlayTrigger trigger="hover focus" placement="auto" overlay={ratingPopover}>
-      <Badge as="a" bg="warning" className="text-decoration-none">{item.rating}<i className="bi bi-star-fill" /></Badge>
+      <RatingBadge rating={item.rating}/>
     </OverlayTrigger>
   )
 
@@ -272,7 +272,7 @@ export function ItemRow({ item, handleSelect }) {
       <td><Form.Check type="checkbox" id={"select_item_" + item.id} value={item.id} onClick={(() => handleSelect(item.id))} /></td>
       <td><a className="text-decoration-none text-primary-emphasis" href={"/item/" + item.id}>{item.name}</a></td>
       <td>{categoryDisplayName[item.category]}</td>
-      <td><BrandLink id={item.brand_id} /></td>
+      <td>{item.brand_id ? <BrandLink id={item.brand_id}/> : null }</td>
       <td>{description ? description : <Badge bg="danger">None</Badge>}</td>
       <td>{rating}</td>
       <td>{item.currency}{item.price}</td>
