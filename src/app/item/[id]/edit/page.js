@@ -54,7 +54,7 @@ export default function Home({params}) {
                 </Row>
                 <Row>
                     <Col className="d-flex text-center mb-2">
-                        <Button variant="primary" size="lg" className="w-100 me-2 fw-bold" onClick={() => updateItem(item.id, () => router.push('/'))}>
+                        <Button variant="primary" size="lg" className="w-100 me-2 fw-bold" onClick={() => updateItem(item.id, () => router.push('../' + params.id))}>
                             Update Item
                         </Button>
                         <Button variant="outline-danger" size="lg" className="w-auto fw-bold" href={"../" + params.id}>

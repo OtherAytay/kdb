@@ -86,7 +86,7 @@ export default function Home({ params }) {
                         <Card.Body>
                             <ListGroup>
                                 {Object.entries(item).filter(([k, v]) => k.startsWith("property_") && v).map(([property, value], idx) => (
-                                    <OverlayTrigger key={idx} placement="auto" overlay={<Tooltip>{properties.filter((p) => p.name == property.replace("property_", ""))[0].description}</Tooltip>}>
+                                    <OverlayTrigger key={idx} placement="auto" overlay={<Tooltip>{properties.filter((p) => p.name == property.replace("property_", ""))[0]?.description}</Tooltip>}>
                                         <ListGroup.Item key={idx} className="w-100 text-center">
                                             <span className="text-property me-2">{propertyDisplayName(property)}</span>
                                             <span className="">{value}</span>
@@ -103,7 +103,7 @@ export default function Home({ params }) {
                         <Card.Body>
                             <ListGroup>
                                 {Object.entries(item).filter(([k, v]) => k.startsWith("feature_") && v).map(([feature, value], idx) => (
-                                    <OverlayTrigger key={idx} placement="auto" overlay={<Tooltip>{features.filter((f) => f.name == feature.replace("feature_", ""))[0].description}</Tooltip>}>
+                                    <OverlayTrigger key={idx} placement="auto" overlay={<Tooltip>{features.filter((f) => f.name == feature.replace("feature_", ""))[0]?.description}</Tooltip>}>
                                         <ListGroup.Item as="a" key={idx} className="w-100 text-center">
                                             <span className="text-feature me-2">{propertyDisplayName(feature)}</span>
                                         </ListGroup.Item>
@@ -119,7 +119,7 @@ export default function Home({ params }) {
                         <Card.Body>
                             <ListGroup>
                                 {Object.entries(item).filter(([k, v]) => k.startsWith("dimension_") && v).map(([dimension, value], idx) => (
-                                    <OverlayTrigger key={idx} placement="auto" overlay={<Tooltip>{dimensions.filter((d) => d.name == dimension.replace("dimension_", ""))[0].description}</Tooltip>}>
+                                    <OverlayTrigger key={idx} placement="auto" overlay={<Tooltip>{dimensions.filter((d) => d.name == dimension.replace("dimension_", ""))[0]?.description}</Tooltip>}>
                                         <ListGroup.Item key={idx} className="w-100 text-center">
                                             <span className="text-dimension me-2">{propertyDisplayName(dimension)}</span>
                                             <span className="">{value}</span>
