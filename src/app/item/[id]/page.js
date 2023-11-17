@@ -30,8 +30,10 @@ export default function Home({ params }) {
             <Row className="mb-2">
                 <Col>
                     <Card>
-                        <Card.Body className="p-2 text-end">
+                        <Card.Body className="p-2 d-flex align-items-center">
+                            <Card.Title className="flex-fill my-auto">Item #{item.id}</Card.Title>
                             <Button size="sm" className="me-2" variant="general" href={params.id + "/edit"}>Edit<i className="ms-2 bi bi-pencil" /></Button>
+                            <Button size="sm" className="me-2" variant="secondary" onClick={() => duplicateItem(item.id, router)}>Duplicate<i className="ms-2 bi bi-copy" /></Button>
                             <Button size="sm" className="me-2" variant="secondary">Export<i className="ms-2 bi bi-download" /></Button>
                             <Button size="sm" className="me-2" variant="outline-danger" onClick={() => deleteItem(item.id, () => router.push('/'))}>Delete<i className="ms-2 bi bi-trash" /></Button>
                         </Card.Body>
@@ -141,4 +143,11 @@ function propertyDisplayName(property) {
 function deleteItem(item_id, callback) {
     db.item.delete(item_id)
     callback()
+}
+
+async function duplicateItem(item_id, router) {
+    const item = await db.item.get(item_id)
+    delete item["id"]
+    const dupe_id = await db.item.add(item)
+    router.push(`./${dupe_id}`)
 }
