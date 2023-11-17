@@ -339,7 +339,7 @@ export function CategorySpecificInfoCard({ setShowModal, category, property }) {
             </Card.Body>
             <Card.Footer className="text-center">
                 <Button variant={property} onClick={() => setShowModal(true)} /* add onclick to open feature modal */>
-                    Add Property
+                    Add {property.slice(0,1).toUpperCase() + property.slice(1)}
                 </Button>
             </Card.Footer>
         </Card>
