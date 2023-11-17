@@ -98,8 +98,8 @@ export function ClothingCard({ difficulty }) {
   return (
     <Row className="mb-2">
       <Col>
-        <Card>
-          <Card.Header className="fw-bold text-center fs-4">
+        <Card className="border-feminization">
+          <Card.Header className="fw-bold text-center text-feminization fs-4">
             Clothing
           </Card.Header>
           <Card.Body>
@@ -229,8 +229,8 @@ export function RouletteCard({ category, difficulty }) {
 
   return (
     <Col className="col-md-4 col-sm-6 col-xs-12 mb-2">
-      <Card>
-        <Card.Header className="fw-bold text-center fs-4">
+      <Card border={CategoryCode[category]}>
+        <Card.Header className={"fw-bold fs-4 text-center text-" + CategoryCode[category]}>
           {category}
         </Card.Header>
         <Card.Body>
