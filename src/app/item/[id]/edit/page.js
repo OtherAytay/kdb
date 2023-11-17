@@ -136,7 +136,7 @@ export function GeneralInfoCard({ item, setShowBrandModal, category }) {
                                     <Form.Select className="me-2">
                                         <option>Select a brand</option>
                                         {brands?.map((brand, idx) => (
-                                            <option key={idx} value={brand.id}>{brand.name}</option>
+                                            <option key={idx} value={brand.id} selected={brand.id == item.brand_id}>{brand.name}</option>
                                         ))}
                                     </Form.Select>
                                     <Button variant="outline-secondary" onClick={() => setShowBrandModal(true)}>
