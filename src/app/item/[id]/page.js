@@ -31,7 +31,7 @@ export default function Home({ params }) {
                 <Col>
                     <Card>
                         <Card.Body className="p-2 text-end">
-                            <Button size="sm" className="me-2" variant="general">Edit<i className="ms-2 bi bi-pencil" /></Button>
+                            <Button size="sm" className="me-2" variant="general" href={params.id + "/edit"}>Edit<i className="ms-2 bi bi-pencil" /></Button>
                             <Button size="sm" className="me-2" variant="secondary">Export<i className="ms-2 bi bi-download" /></Button>
                             <Button size="sm" className="me-2" variant="outline-danger" onClick={() => deleteItem(item.id, () => router.push('/'))}>Delete<i className="ms-2 bi bi-trash" /></Button>
                         </Card.Body>
