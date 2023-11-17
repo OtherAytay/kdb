@@ -14,21 +14,23 @@ import {
     InputGroup,
     Table
 } from 'react-bootstrap';
-import { db } from '../db';
+import { db } from '../../../db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { toDBName, toDisplayName } from '../utilities';
-import { redirect, useRouter } from 'next/navigation';
+import { toDBName, toDisplayName } from '../../../utilities';
+import { useRouter } from 'next/navigation';
 
-export default function Home() {
+export default function Home({params}) {
+    const item = useLiveQuery(() => db.item.get(parseInt(params.id)))
     const [showBrandModal, setShowBrandModal] = useState(false);
     const [showPropertyModal, setShowPropertyModal] = useState(false)
     const [showFeatureModal, setShowFeatureModal] = useState(false)
     const [showDimensionModal, setShowDimensionModal] = useState(false)
-    const [category, setCategory] = useState("dildo")
     const router = useRouter()
 
     // Prefetch related
     const brands = useLiveQuery(() => db.brand.toArray())
+
+    if (!item) { return }
 
     return (
         <main>
@@ -36,24 +38,27 @@ export default function Home() {
                 {/* General Item Information */}
                 <Row className="mb-2">
                     <Col>
-                        <GeneralInfoCard setShowBrandModal={setShowBrandModal} category={category} setCategory={setCategory} />
+                        <GeneralInfoCard item={item} setShowBrandModal={setShowBrandModal} category={item.category} />
                     </Col>
                 </Row>
                 <Row className="">
                     <Col className="col-12 col-lg-4 mb-2">
-                        <CategorySpecificInfoCard setShowModal={setShowPropertyModal} category={category} property="property" />
+                        <CategorySpecificInfoCard item={item} setShowModal={setShowPropertyModal} category={item.category} property="property" />
                     </Col>
                     <Col className="col-12 col-lg-4 mb-2">
-                        <CategorySpecificInfoCard setShowModal={setShowFeatureModal} category={category} property="feature" />
+                        <CategorySpecificInfoCard item={item} setShowModal={setShowFeatureModal} category={item.category} property="feature" />
                     </Col>
                     <Col className="col-12 col-lg-4 mb-2">
-                        <CategorySpecificInfoCard setShowModal={setShowDimensionModal} category={category} property="dimension" />
+                        <CategorySpecificInfoCard item={item} setShowModal={setShowDimensionModal} category={item.category} property="dimension" />
                     </Col>
                 </Row>
                 <Row>
-                    <Col className="text-center mb-2">
-                        <Button variant="primary" size="lg" className="w-100 fw-bold" onClick={() => createItem(category, () => router.push('/'))}>
-                            Create Item
+                    <Col className="d-flex text-center mb-2">
+                        <Button variant="primary" size="lg" className="w-100 me-2 fw-bold" onClick={() => updateItem(item.id, () => router.push('/'))}>
+                            Update Item
+                        </Button>
+                        <Button variant="outline-danger" size="lg" className="w-auto fw-bold" href={"../" + params.id}>
+                            Cancel
                         </Button>
                     </Col>
                 </Row>
@@ -68,7 +73,7 @@ export default function Home() {
     )
 }
 
-export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
+export function GeneralInfoCard({ item, setShowBrandModal, category }) {
     const categoryRadios = [
         { name: 'Dildo', value: "dildo" },
         { name: 'Anal Toy', value: "anal" },
@@ -98,6 +103,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                             <ButtonGroup>
                                 {categoryRadios.map((radio, idx) => (
                                     <ToggleButton
+                                        disabled
                                         key={idx}
                                         id={`radio-${radio.name.toLowerCase()}`}
                                         type="radio"
@@ -105,8 +111,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                                         className={category == radio.value ? "active" : ""}
                                         name="radio"
                                         value={radio.value}
-                                        checked={category == radio.value}
-                                        onChange={(e) => { setCategory(e.currentTarget.value) }}>
+                                        checked={item.category == radio.value}>
                                         {radio.name}
                                     </ToggleButton>
                                 ))}
@@ -119,7 +124,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                         <Col className="col-12 col-md-6 col-xl-4 mb-2">
                             <Form.Group controlId="item_name">
                                 <Form.Label>Item Name<RequiredSymbol /></Form.Label>
-                                <Form.Control type="text" placeholder="Dildinator 3000" required />
+                                <Form.Control type="text" placeholder="Dildinator 3000" defaultValue={item.name} required />
                             </Form.Group>
                         </Col>
 
@@ -145,7 +150,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                         <Col className="col-12 col-lg-6 col-xl-4 mb-2">
                             <Form.Group controlId="url">
                                 <Form.Label>Product URL</Form.Label>
-                                <Form.Control type="url" placeholder="https://www.dildostore.com/products/123" />
+                                <Form.Control type="url" placeholder="https://www.dildostore.com/products/123" defaultValue={item.url} />
                             </Form.Group>
                         </Col>
 
@@ -154,7 +159,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                             <Form.Group>
                                 <Form.Label id="image">Item Image</Form.Label>
                                 <InputGroup>
-                                    <Form.Control id="image" type="url" placeholder="https://www.dildostore.com/products/123/image.jpg" />
+                                    <Form.Control id="image" type="url" defaultValue={item.image} placeholder="https://www.dildostore.com/products/123/image.jpg" />
                                     <Form.Control id="image_file" type="file" accept="image/*" onChange={() => imageToDataURL()} />
                                 </InputGroup>
                             </Form.Group>
@@ -166,7 +171,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                                 <Form.Label>Price</Form.Label>
                                 <InputGroup>
                                     <InputGroup.Text>$</InputGroup.Text>
-                                    <Form.Control type="number" placeholder="69.69" step="0.01" />
+                                    <Form.Control type="number" placeholder="69.69" step="0.01" defaultValue={item.price}/>
                                 </InputGroup>
                             </Form.Group>
                         </Col>
@@ -175,7 +180,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                         <Col className="col-12 col-sm-6 col-xl-4 mb-2 mb-sm-0">
                             <Form.Group controlId="purchase_date">
                                 <Form.Label>Purchase Date</Form.Label>
-                                <Form.Control type="date" defaultValue={(new Date()).toLocaleDateString('en-CA')} />
+                                <Form.Control type="date" defaultValue={item.purchase_date} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -185,7 +190,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                         <Col className="col-12 col-md-6 mb-2">
                             <Form.Group className="mb-2 h-100 d-flex flex-column" controlId="description" >
                                 <Form.Label>Item Description</Form.Label>
-                                <Form.Control type="text" as="textarea" className="flex-fill" placeholder="Describe this item..." />
+                                <Form.Control type="text" as="textarea" className="flex-fill" placeholder="Describe this item..." defaultValue={item.description} />
                             </Form.Group>
                         </Col>
 
@@ -193,7 +198,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                             {/* Rating */}
                             <Form.Group className="mb-2" controlId="rating" >
                                 <Form.Label>Rating</Form.Label>
-                                <Form.Range variant="primary" min="1" max="5" step="1" onChange={updateRatingText} />
+                                <Form.Range variant="primary" min="1" max="5" step="1" onChange={updateRatingText} defaultValue={item.rating} />
                                 <div className="text-center w-100">
                                     <Badge bg="general" className="fs-4">
                                         <span id="rating_text">3</span>
@@ -204,7 +209,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                             {/* Rating Note */}
                             <Form.Group className="mb-2" controlId="rating_note" >
                                 <Form.Label>Rating Note</Form.Label>
-                                <Form.Control type="text" as="textarea" placeholder="Explain your rating..." />
+                                <Form.Control type="text" as="textarea" placeholder="Explain your rating..." defaultValue={item.rating_note} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -215,7 +220,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                         <Col className="col-12 col-md-6 mb-2">
                             <Form.Group controlId="mf_size">
                                 <Form.Label>Manufacturer Size</Form.Label>
-                                <Form.Control type="text" placeholder="Medium" />
+                                <Form.Control type="text" placeholder="Medium" defaultValue={item.mf_size}/>
                             </Form.Group>
                             <Form.Text>Official size as specified by manufacturer</Form.Text>
                         </Col>
@@ -224,7 +229,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                         <Col className="col-12 col-md-6 mb-2">
                             <Form.Group controlId="mf_color">
                                 <Form.Label>Manufacturer Color</Form.Label>
-                                <Form.Control type="text" placeholder="Graphite" />
+                                <Form.Control type="text" placeholder="Graphite" defaultValue={item.mf_color}/>
                             </Form.Group>
                             <Form.Text>Official color as specified by manufacturer</Form.Text>
                         </Col>
@@ -233,7 +238,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                         <Col className="col-12 col-md-6 mb-2">
                             <Form.Group controlId="user_size">
                                 <Form.Label>User Size</Form.Label>
-                                <Form.Control type="text" list="user_sizes" placeholder="Small" />
+                                <Form.Control type="text" list="user_sizes" placeholder="Small" defaultValue={item.user_size}/>
                             </Form.Group>
                             <Form.Text>Size as specified by user</Form.Text>
                             <datalist id="user_sizes">
@@ -245,7 +250,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
                         <Col className="col-12 col-md-6 mb-2">
                             <Form.Group controlId="user_color">
                                 <Form.Label>User Color</Form.Label>
-                                <Form.Control type="text" list="user_colors" placeholder="Silver" />
+                                <Form.Control type="text" list="user_colors" placeholder="Silver" defaultValue={item.user_color}/>
                             </Form.Group>
                             <Form.Text>Color as specified by user</Form.Text>
                             <datalist id="user_colors">
@@ -259,7 +264,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
     )
 }
 
-export function CategorySpecificInfoCard({ setShowModal, category, property }) {
+export function CategorySpecificInfoCard({item, setShowModal, category, property }) {
     switch (property) {
         case "property": var store = db.property; break;
         case "feature": var store = db.feature; break;
@@ -273,7 +278,7 @@ export function CategorySpecificInfoCard({ setShowModal, category, property }) {
                     <Col key={idx} className="col-12 col-md-6 col-lg-12 mb-2">
                         <Form.Group controlId={property + "_" + prop.name}>
                             <Form.Label>{toDisplayName(prop.name)}</Form.Label>
-                            <Form.Control type="text" placeholder={prop.placeholder} />
+                            <Form.Control type="text" placeholder={prop.placeholder} defaultValue={item[property + "_" + prop.name]}/>
                             {prop.description ? <Form.Text>{prop.description}</Form.Text> : null}
                         </Form.Group>
                     </Col>
@@ -298,7 +303,7 @@ export function CategorySpecificInfoCard({ setShowModal, category, property }) {
                             <tbody>
                                 {categoryProps?.map((feature, idx) => (
                                     <tr key={idx}>
-                                        <td><Form.Check inline id={property + "_" + feature.name} type="checkbox" /></td>
+                                        <td><Form.Check inline id={property + "_" + feature.name} type="checkbox" defaultChecked={item[property + "_" + feature.name]} /></td>
                                         <td>{toDisplayName(feature.name)}</td>
                                         <td>{feature.description}</td>
                                     </tr>
@@ -316,7 +321,7 @@ export function CategorySpecificInfoCard({ setShowModal, category, property }) {
                     <Form.Group key={idx} className="mb-2" controlId={property + "_" + dim.name}>
                         <Form.Label>{toDisplayName(dim.name)}</Form.Label>
                         <InputGroup>
-                            <Form.Control type="number" placeholder="6.9" />
+                            <Form.Control type="number" placeholder="6.9" defaultValue={item[property + "_" + dim.name]}/>
                             <InputGroup.Text>in</InputGroup.Text>
                         </InputGroup>
                         <Form.Text>{dim.description}</Form.Text>
@@ -746,7 +751,7 @@ async function imageToDataURL() {
     })
 }
 
-async function createItem(category, callback) {
+async function updateItem(id, callback) {
     const general = document.forms['general']
 
     var name = general['item_name'].value
@@ -770,7 +775,6 @@ async function createItem(category, callback) {
 
     var item = {
         name: name,
-        category: category,
         brand_id: parseInt(brand_id) || "null",
         description: description,
         url: url,
@@ -790,7 +794,7 @@ async function createItem(category, callback) {
     features.forEach((feature) => item["feature_" + feature.key] = feature.value)
     dimensions.forEach((dimension) => item["dimension_" + dimension.key] = parseFloat(dimension.value))
 
-    await db.item.add(item)
+    await db.item.update(id, item)
     callback()
 }
 
