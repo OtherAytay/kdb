@@ -7,7 +7,7 @@ export const categoryDisplayName = {
 }
 
 export function displayDate(date) {
-    return (new Date(date)).toLocaleDateString().slice(0, 10)
+    return `${date.slice(5,7)}/${date.slice(8,10)}/${date.slice(0,4)}`
 }
 
 export function toDBName(displayName) {
