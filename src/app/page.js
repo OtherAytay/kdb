@@ -6,6 +6,7 @@ import { useState } from 'react';
 import {
   Badge,
   Button,
+  ButtonGroup,
   Card,
   Col,
   Container,
@@ -17,10 +18,9 @@ import {
   OverlayTrigger,
   Popover, Row,
   Spinner,
-  Table,
-  Tooltip
+  Table, Tooltip
 } from 'react-bootstrap';
-import { db, exportKDB, exportItems, importKDB, importIntoKDB, importItems } from './db';
+import { db, exportItems, exportKDB, importIntoKDB, importItems, importKDB } from './db';
 import { categoryDisplayName, displayDate } from './utilities';
 
 export default function Home() {
@@ -31,6 +31,15 @@ export default function Home() {
   const [importType, setImportType] = useState('db_replace');
 
   if (!items) { return }
+
+  if (localStorage["view"] != view) {
+    changeView(localStorage["view"])
+  }
+
+  function changeView(view) {
+    setView(view)
+    localStorage["view"] = view
+  }
 
   function handleSelect(item_id) {
     var selection = structuredClone(selected)
@@ -46,7 +55,7 @@ export default function Home() {
   function clearSelection() {
     setSelected([])
     const checkboxes = document.querySelectorAll("[id^=select_item_]")
-    for (const checkbox of checkboxes) { checkbox.checked = false}
+    for (const checkbox of checkboxes) { checkbox.checked = false }
   }
 
   return (
@@ -61,6 +70,10 @@ export default function Home() {
               {/* Action Toolbar */}
               <Card>
                 <Card.Body className="p-2 d-flex">
+                  <ButtonGroup size="sm" className="me-2">
+                    <Button variant="outline-general" onClick={() => changeView("list")} className={view == "list" ? "active" : ""}><i className="bi bi-list" /></Button>
+                    <Button variant="outline-general" onClick={() => changeView("card")} className={view == "card" ? "active" : ""}><i className="bi bi-grid-3x2-gap" /></Button>
+                  </ButtonGroup>
                   {/* Item selector */}
                   <InputGroup size="sm" className="me-2 w-auto">
                     <InputGroup.Text>Selected</InputGroup.Text>
@@ -71,7 +84,7 @@ export default function Home() {
                   </InputGroup>
                   {/* Action selector */}
                   <DropdownButton size="sm" variant="primary" title="Item Actions" disabled={selected.length == 0}>
-                    <Dropdown.Item onClick={() => {deleteItems(selected); clearSelection()}}>Delete</Dropdown.Item>
+                    <Dropdown.Item onClick={() => { deleteItems(selected); clearSelection() }}>Delete</Dropdown.Item>
                     <Dropdown.Item onClick={() => exportItems(selected)}>Export</Dropdown.Item>
                     <Dropdown.Item>Add Label</Dropdown.Item>
                     <Dropdown.Item>Remove Label</Dropdown.Item>
@@ -83,17 +96,17 @@ export default function Home() {
                       <OverlayTrigger
                         placement='left'
                         overlay={<Tooltip className="opacity-100">Import another database to <span className="text-danger">replace</span> the existing one</Tooltip>}>
-                        <Dropdown.Item onClick={() => {setImportType("db_replace") ; setShowImportModal(true)}}>Import DB</Dropdown.Item>
+                        <Dropdown.Item onClick={() => { setImportType("db_replace"); setShowImportModal(true) }}>Import DB</Dropdown.Item>
                       </OverlayTrigger>
                       <OverlayTrigger
                         placement='left'
                         overlay={<Tooltip className="opacity-100">Import another database to <span className="text-danger">add</span> to the existing one</Tooltip>}>
-                        <Dropdown.Item disabled onClick={() => {setImportType("db_add") ; setShowImportModal(true)}}>Import DB into DB</Dropdown.Item>
+                        <Dropdown.Item disabled onClick={() => { setImportType("db_add"); setShowImportModal(true) }}>Import DB into DB</Dropdown.Item>
                       </OverlayTrigger>
                       <OverlayTrigger
                         placement='left'
                         overlay={<Tooltip className="opacity-100">Import items to <span className="text-danger">add</span> to the existing database</Tooltip>}>
-                        <Dropdown.Item onClick={() => {setImportType("items_add") ; setShowImportModal(true)}}>Import Items into DB</Dropdown.Item>
+                        <Dropdown.Item onClick={() => { setImportType("items_add"); setShowImportModal(true) }}>Import Items into DB</Dropdown.Item>
                       </OverlayTrigger>
                       <OverlayTrigger
                         placement='left'
@@ -110,14 +123,14 @@ export default function Home() {
             <Row xs="1" lg="2">
               {items?.map((item, idx) => (
                 <Col key={idx}>
-                  <ItemCard item={item} />
+                  <ItemCard item={item} handleSelect={handleSelect} />
                 </Col>
               ))}
             </Row>
             : <ItemList items={items} handleSelect={handleSelect} />}
         </Col>
       </Row>
-      <ImportModal show={showImportModal} handleClose={() => setShowImportModal(false)} importType={importType}/>
+      <ImportModal show={showImportModal} handleClose={() => setShowImportModal(false)} importType={importType} />
     </Container>
   )
 }
@@ -151,11 +164,11 @@ export function ImportModal({ show, handleClose, importType }) {
       return
     }
     setLoading(true)
-    importFunction[importType](importFile, () => {setLoading(false); handleClose()})
+    importFunction[importType](importFile, () => { setLoading(false); handleClose() })
   }
 
   return (
-    <Modal show={show} onHide={() => {setLoading(false); handleClose()}}>
+    <Modal show={show} onHide={() => { setLoading(false); handleClose() }}>
       <Modal.Header closeButton className="fs-5">
         {importTypeText[importType]}
       </Modal.Header>
@@ -165,8 +178,8 @@ export function ImportModal({ show, handleClose, importType }) {
       </Modal.Body>
       <Modal.Footer>
         <Button className="d-flex" variant="primary" onClick={() => startImport()}>
-        <Spinner as="span" animation="grow" role="status" hidden={!loading} className="me-2"></Spinner>
-        <span className="my-auto">Import</span>
+          <Spinner as="span" animation="grow" role="status" hidden={!loading} className="me-2"></Spinner>
+          <span className="my-auto">Import</span>
         </Button>
       </Modal.Footer>
     </Modal>
@@ -174,7 +187,7 @@ export function ImportModal({ show, handleClose, importType }) {
 }
 
 function deleteItems(selected) {
-  db.item.bulkDelete(selected)  
+  db.item.bulkDelete(selected)
 }
 
 function selectBulk(setSelected, operation) {
@@ -246,7 +259,7 @@ export function ItemRow({ item, handleSelect }) {
 
   const rating = (
     <OverlayTrigger trigger="hover focus" placement="auto" overlay={ratingPopover}>
-      <RatingBadge rating={item.rating}/>
+      <RatingBadge rating={item.rating} />
     </OverlayTrigger>
   )
 
@@ -272,7 +285,7 @@ export function ItemRow({ item, handleSelect }) {
       <td><Form.Check type="checkbox" id={"select_item_" + item.id} value={item.id} onClick={(() => handleSelect(item.id))} /></td>
       <td><a className="text-decoration-none text-primary-emphasis" href={"/item/" + item.id}>{item.name}</a></td>
       <td>{categoryDisplayName[item.category]}</td>
-      <td>{item.brand_id ? <BrandLink id={item.brand_id}/> : null }</td>
+      <td>{item.brand_id ? <BrandLink id={item.brand_id} /> : null}</td>
       <td>{description ? description : <Badge bg="danger">None</Badge>}</td>
       <td>{rating}</td>
       <td>{item.currency}{item.price}</td>
@@ -283,20 +296,21 @@ export function ItemRow({ item, handleSelect }) {
   )
 }
 
-export function ItemCard({ item }) {
+export function ItemCard({ item, handleSelect }) {
   const brand = useLiveQuery(() => db.brand.get(item.brand_id))
 
   return (
     <Card className="mb-2">
       <Row className="g-0">
-        <Col className="col-4">
-          <Card.Img className="ratio ratio-1x1 rounded-0 rounded-start" src={item.image} />
+        <Col className="col-4 d-flex align-items-center">
+          <Card.Img className="my-auto ratio rounded-0 rounded-start" src={item.image} />
         </Col>
         <Col className="col-8">
           <Card.Header>
             <Card.Title className="fw-bold">
-              <span>{item.name}</span>
-              <Badge className="float-end" bg="primary">{categoryDisplayName[item.category]}</Badge>
+              <a className="text-decoration-none text-primary-emphasis" href={"/item/" + item.id}>{item.name}</a>
+              <Form.Check className="float-end" id={"select_item_" + item.id} style={{ marginTop: "-0.125rem" }} onClick={() => handleSelect(item.id)} />
+              <Badge className="me-2 float-end" bg="primary">{categoryDisplayName[item.category]}</Badge>
               <Badge className="me-2 float-end" bg="warning">{item.rating}<i className="bi bi-star-fill" /></Badge>
             </Card.Title>
             <Card.Subtitle>
@@ -306,6 +320,25 @@ export function ItemCard({ item }) {
           </Card.Header>
           <Card.Body className="pt-1">
             {item.description ? item.description : item.rating_note}
+            <hr />
+            <Row>
+              <Col className="col-6">
+                {item.mf_size || item.mf_color ?
+                  <p>
+                    <span className="fs-5 fw-semibold">Manufacturer</span> <br />
+                    {item.mf_size ? <span>Size: {item.mf_size}<br /></span> : null}
+                    {item.mf_color ? <span>Color: {item.mf_color}<br /></span> : null}
+                  </p> : null}
+              </Col>
+              <Col className="col-6">
+                {item.user_size || item.user_color ?
+                  <p>
+                    <span className="fs-5 fw-semibold">User</span> <br />
+                    {item.user_size ? <span>Size: {item.user_size}<br /></span> : null}
+                    {item.user_color ? <span>Color: {item.user_color}<br /></span> : null}
+                  </p> : null}
+              </Col>
+            </Row>
           </Card.Body>
         </Col>
       </Row>
