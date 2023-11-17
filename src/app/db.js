@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-import { exportDB, importDB, importInto } from "dexie-export-import";
+//import { exportDB, importDB, importInto } from "dexie-export-import";
 import { saveAs } from './utilities';
 
 export var db = new Dexie('KinkDB');
@@ -26,6 +26,7 @@ db.version(1).stores({
 });
 
 export async function exportKDB(progressCallback = null) {
+  const exportDB = (await import('dexie-export-import')).exportDB;
   var options = { prettyJSON: true }
   if (progressCallback) { options['progressCallback'] = progressCallback }
   const exported = await exportDB(db, options)
@@ -33,17 +34,19 @@ export async function exportKDB(progressCallback = null) {
   var saveDate = new Date()
   saveDate = saveDate.toISOString().slice(0, 10) + " " + saveDate.toTimeString().slice(0, 8).replaceAll(":", "-");
   saveAs(exported, "KDB - " + saveDate + ".kdb")
-  progressCallback();
+  if (progressCallback) {progressCallback()};
 }
 
 export async function importKDB(kdb_file, progressCallback = null) {
+  const importDB = (await import('dexie-export-import')).importDB;
   db = await importDB(kdb_file, {clearTablesBeforeImport: true}).catch((err) => console.log(err))
-  progressCallback();
+  if (progressCallback) {progressCallback()};
 }
 
 export async function importIntoKDB(kdb_file, progressCallback = null) {
+    const importInto = (await import('dexie-export-import')).importInto;
   await importInto(db, kdb_file).catch((err) => console.log(err))
-  progressCallback();
+  if (progressCallback) {progressCallback()};
 }
 
 export async function exportItems(item_ids) {
@@ -68,7 +71,7 @@ export async function importItems(kdbi_file, progressCallback = null) {
     var items = JSON.parse(fr.result);
     items.forEach((item) => delete item.id);
     await db.item.bulkPut(items);
-    progressCallback();
+  if (progressCallback) {progressCallback()};
   }
 }
 
