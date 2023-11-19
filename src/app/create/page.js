@@ -77,7 +77,7 @@ export function GeneralInfoCard({ setShowBrandModal, category, setCategory }) {
         { name: 'Cosmetic', value: "cosmetic" }
     ]
     // Prefetch related
-    const brands = useLiveQuery(() => db.brand.toArray())
+    const brands = useLiveQuery(() => db.brand.toCollection().sortBy('name'))
     const user_colors = useLiveQuery(() => db.user_color.toArray())
     const user_sizes = useLiveQuery(() => db.user_size.toArray())
 

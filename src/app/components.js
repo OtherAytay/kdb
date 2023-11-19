@@ -4,7 +4,7 @@ import { Badge } from 'react-bootstrap'
 import { forwardRef } from "react"
 
 export function BrandLink({ id }) {
-  const brand = useLiveQuery(() => db.brand.get(id)) 
+  const brand = useLiveQuery(() => db.brand.get(id), [id]) 
   if (!brand) { return }
   return (<a className="text-decoration-none text-primary-emphasis" target="blank_" rel="noopener noreferrer" href={brand.url}>{brand.name}</a>)
 }
