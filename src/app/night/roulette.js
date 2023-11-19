@@ -59,8 +59,10 @@ function rollBDSM(difficulty=default_difficulty) {
     var rollCount = r10()
     var result = [{rollType: "Count", roll: rollCount, decision: findDecision(bdsm[difficulty]["count"], rollCount)["count"]}]
 
-    if (difficulty == "hard" || difficulty == "extreme") {
-        result.push({rollType: "Gear", roll: "Automatic", decision: "Collar"})
+    if (difficulty == "hard") {
+        result.push({rollType: "Gear", roll: "Automatic", decision: "Any Collar"})
+    } else if (difficulty == "extreme") {
+        result.push({rollType: "Gear", roll: "Automatic", decision: "Heavy Collar"})
     }
 
     var selected = []
@@ -200,7 +202,7 @@ export const clothing = {
         ],
         bottom: [
             {min: 1, max: 4, bottom: "None"},
-            {min: 5, max: 7, bottom: "Shorts"},
+            {min: 5, max: 7, bottom: "Any Pants"},
             {min: 8, max: 10, bottom: "Skirt"},
         ],
         limbs: [
@@ -230,9 +232,9 @@ export const clothing = {
         ],
         bottom: [
             {min: 1, max: 3, bottom: "None"},
-            {min: 4, max: 6, bottom: "Shorts"},
+            {min: 4, max: 6, bottom: "Any Pants"},
             {min: 7, max: 9, bottom: "Skirt"},
-            {min: 10, max: 10, bottom: "Tight Athletic Shorts"},
+            {min: 10, max: 10, bottom: "Athletic Tights"},
         ],
         limbs: [
             {min: 1, max: 3, limbs: "None"},
@@ -261,9 +263,9 @@ export const clothing = {
         ],
         bottom: [
             {min: 1, max: 2, bottom: "None"},
-            {min: 3, max: 5, bottom: "Shorts"},
+            {min: 3, max: 5, bottom: "Any Pants"},
             {min: 6, max: 8, bottom: "Skirt"},
-            {min: 9, max: 10, bottom: "Tight Athletic Shorts"},
+            {min: 9, max: 10, bottom: "Athletic Tights"},
         ],
         limbs: [
             {min: 1, max: 2, limbs: "None"},
@@ -291,9 +293,9 @@ export const clothing = {
         ],
         bottom: [
             {min: 1, max: 1, bottom: "None"},
-            {min: 2, max: 4, bottom: "Shorts"},
+            {min: 2, max: 4, bottom: "Any Pants"},
             {min: 5, max: 7, bottom: "Skirt"},
-            {min: 8, max: 10, bottom: "Tight Athletic Shorts"},
+            {min: 8, max: 10, bottom: "Athletic Tights"},
         ],
         limbs: [
             {min: 1, max: 3, limbs: "Thigh High Socks"},
@@ -310,7 +312,7 @@ export const bdsm = {
             { min: 9, max: 10, count: 2} // 20%
         ],
         gear: [
-            { min: 1, max: 5, gear: "Collar"}, // 50%
+            { min: 1, max: 5, gear: "Any Collar"}, // 50%
             { min: 6, max: 8, gear: "Blindfold"}, // 30%
             { min: 9, max: 10, gear: "Earplugs"}, // 20%
         ]
@@ -323,7 +325,7 @@ export const bdsm = {
             { min: 9, max: 10, count: 3} // 20%
         ],
         gear: [
-            { min: 1, max: 5, gear: "Collar"}, // 50%
+            { min: 1, max: 5, gear: "Any Collar"}, // 50%
             { min: 6, max: 8, gear: "Blindfold"}, // 30%
             { min: 9, max: 10, gear: "Earplugs"}, // 20%
         ]
@@ -336,10 +338,11 @@ export const bdsm = {
             { min: 9, max: 10, count: 3} // 20%
         ],
         gear: [
-            // Collar is automatic on hard
-            { min: 1, max: 4, gear: "Blindfold"}, // 40%
-            { min: 5, max: 8, gear: "Earplugs"}, // 40%
-            { min: 9, max: 10, gear: "Mouth Gag"}, // 20%
+            // Any Collar is automatic on hard
+            { min: 1, max: 4, gear: "Upgrade to Heavy Collar"}, // 40%
+            { min: 5, max: 7, gear: "Blindfold"}, // 40%
+            { min: 8, max: 9, gear: "Earplugs"}, // 40%
+            // { min: 9, max: 10, gear: "Mouth Gag"}, // 20%
         ]
     },
     extreme: {
@@ -350,10 +353,10 @@ export const bdsm = {
             { min: 10, max: 10, count: 4} // 10%
         ],
         gear: [
-            // Collar is automatic on extreme
-            { min: 1, max: 3, gear: "Blindfold"}, // 30%
-            { min: 4, max: 6, gear: "Earplugs"}, // 30%
-            { min: 7, max: 8, gear: "Mouth Gag"}, // 20%
+            // Heavy Collar is automatic on extreme
+            { min: 1, max: 4, gear: "Blindfold"}, // 30%
+            { min: 5, max: 8, gear: "Earplugs"}, // 30%
+            // { min: 7, max: 8, gear: "Mouth Gag"}, // 20%
             { min: 9, max: 10, gear: "Chastity Cage"}, // 20%
         ]
     },

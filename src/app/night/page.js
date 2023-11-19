@@ -51,7 +51,7 @@ export default function Home() {
                   </ToggleButton>
                 ))}
               </ButtonGroup>
-              <div class="d-flex mt-2">
+              <div className="d-flex mt-2">
                 <Button
                   id="clear_all"
                   type="button"
@@ -221,7 +221,7 @@ export function RouletteCard({ category, difficulty }) {
           Automatic
         </Badge>
         <span className="float-end">
-          {"Collar"}
+          {difficulty == "hard" ? "Any Collar" : "Heavy Collar"}
         </span>
       </ListGroup.Item>
     )
