@@ -6,11 +6,6 @@ export var db = new Dexie('KinkDB');
 db.version(1).stores({
   item: '++id, name, category, brand_id, &subitem_id', // description, url, image, purchase_date, price, currency, rating, rating_note, mf_size, mf_color, user_size, user_color
   brand: '++id, name', // website_url, note, rating, rating_note
-  // dildo: '++id, &item_id', // appearance, texture, firmness, alignment, balls, suction, vibration, thrusting, e_stim, battery_life, squirting, inflatable, vac_u_lock, harness_compatible, ovipositor, dimensions[total_length, insertable_length, head_diameter, shaft_diameter, feature_diameter], weight
-  // anal: '++id, &item_id', // base, texture, firmness, alignment, suction, tunnel, expanding, tail, vibration, thrusting, e_stim, power_source, battery_life, inflatable, vac_u_lock, lockable, harness_compatible, other_features, dimensions[total_length, insertable_length, head_diameter, shaft_diameter, feature_diameter], weight
-  // bdsm: '++id, &item_id', // subtype
-  // clothing: '++id, &item_id', // subtype, texture, style, fit
-  // cosmetic: '++id, &item_id', // subtype, style,
 
   property: '++id, name, category, &[name+category]', // description, placeholder
   dimension: '++id, name, category, &[name+category]', // description
@@ -149,7 +144,7 @@ db.on("populate", (transaction) => {
 
   // Label Categories & Labels
   transaction.label_category.add({ id: 1, name: "Kinks", description: "Organize items by their associated kinks", default_color: "#d63384" })
-  transaction.label.add({ name: "Slave", description: "Give up control", category_id: 1 })
+  transaction.label.add({ name: "Slave", description: "Give up control", category_id: 1, color: "#000000" })
   transaction.label.add({ name: "Sissy", description: "Good girl for daddy", category_id: 1 })
   transaction.label_category.add({ id: 2, name: "Clothing Styles", description: "Organize clothing by their styles", default_color: "#d63384" })
   transaction.label.add({ name: "Slutty", description: "Revealing and promiscuous", category_id: 2 })
