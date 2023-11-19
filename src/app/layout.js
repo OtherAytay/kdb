@@ -26,15 +26,15 @@ export default function RootLayout({ children }) {
 
 export function NavLayout() {
   return (
-    <Navbar expand="sm" className="bg-body-tertiary">
+    <Navbar expand="sm" className="bg-body-tertiary border-bottom">
       <Container>
         <Navbar.Brand href="#home">KinkDB</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav variant="pills" className="mx-auto" defaultActiveKey={usePathname()}>
-              <Nav.Link className="fw-bold text-white" as={Link} href="/">Home</Nav.Link>
-              <Nav.Link className="fw-bold text-white" as={Link} href="/create">Create</Nav.Link>
-              <Nav.Link className="fw-bold text-white" as={Link} href="/night">Night</Nav.Link>
+              <Nav.Link className="fw-bold text-primary" as={Link} href="/">Home</Nav.Link>
+              <Nav.Link className="fw-bold text-primary" as={Link} href="/create">Create</Nav.Link>
+              <Nav.Link className="fw-bold text-primary" as={Link} href="/night">Night</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
