@@ -396,15 +396,15 @@ export const bondage = {
             { min: 1, max: 2, binding: "None" }, // 20%
             { min: 2, max: 5, binding: "Wrists Together in Front, Ankles Together" }, // 40%
             { min: 6, max: 8, binding: "Wrists To Collar, Ankles Together" }, // 30%
-            { min: 9, max: 10, binding: "Wrists Together in Back, Ankles Together" } // 10%
+            { min: 9, max: 10, binding: "Together to Bed" } // 10%
         ]
     },
     extreme: {
         binding: [
             { min: 1, max: 3, binding: "Wrists To Collar, Ankles Together" }, // 30%
-            { min: 4, max: 5, binding: "Wrists Together in Back, Ankles Together" }, // 20%
-            { min: 6, max: 7, binding: "Together to Bed" }, // 20%
-            { min: 8, max: 9, binding: "Spread Eagle" }, // 20%
+            { min: 4, max: 5, binding: "Together to Bed" }, // 20%
+            { min: 6, max: 7, binding: "Spread Eagle" }, // 20%
+            { min: 8, max: 9, binding: "Wrists Together in Back, Ankles Together" }, // 20%
             { min: 10, max: 10, binding: "Hogtie" }, // 10%
         ]
     },

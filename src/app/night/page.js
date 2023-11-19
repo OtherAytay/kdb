@@ -110,7 +110,7 @@ export function ClothingCard({ difficulty }) {
             <h5 className="text-center">Scheme</h5>
             <ListGroup variant="horizontal" className="justify-content-center">
               {categoryDists("Clothing")[difficulty]["scheme"].map((decision, idx) => (
-                <OverlayTrigger key={idx + 1} trigger={["hover", "focus:"]} placement="bottom" overlay={decision.description ? <Tooltip>{decision.description}</Tooltip> : null}>
+                <OverlayTrigger key={idx + 1} trigger={["hover", "focus:"]} placement="bottom" overlay={<Tooltip>{decision.description}</Tooltip>}>
                   <ListGroup.Item action={"description" in decision} id={"clothing_scheme_" + (idx + 1)} className="w-auto">
                     <Badge bg={CategoryCode["Clothing"]} className="me-2">
                       {decision.min == decision.max ? decision.min : decision.min + "-" + decision.max}
@@ -251,7 +251,6 @@ export function RouletteCard({ category, difficulty }) {
     )
   }
 
-  console.log(categoryDists(category)[difficulty])
   return (
     <Col className="col-md-4 col-sm-6 col-xs-12 mb-2">
       <Card border={CategoryCode[category]}>
@@ -264,8 +263,18 @@ export function RouletteCard({ category, difficulty }) {
             <ListGroup key={"decision_group_" + idx} className="mb-2">
               {rollType == "gear" ? automatic : null}
               {decisions.map((decision, idx) => (
-                <OverlayTrigger key={idx + 1} trigger={["hover", "focus:"]} placement="auto" overlay={decision.description ? <Tooltip>{decision.description}</Tooltip> : null}>
-                  <ListGroup.Item action={"description" in decision} id={category.toLowerCase() + "_" + rollType + "_" + (idx + 1)}>
+                decision.description ?
+                  <OverlayTrigger key={idx + 1} trigger={["hover", "focus:"]} placement="auto" overlay={<Tooltip>{decision.description}</Tooltip>}>
+                    <ListGroup.Item action={"description" in decision} id={category.toLowerCase() + "_" + rollType + "_" + (idx + 1)}>
+                      <Badge bg={CategoryCode[category]}>
+                        {decision.min == decision.max ? decision.min : decision.min + "-" + decision.max}
+                      </Badge>
+                      <span className="float-end">
+                        {decision[rollType] === true ? "Yes" : decision[rollType] === false ? "No" : decision[rollType]}
+                      </span>
+                    </ListGroup.Item>
+                  </OverlayTrigger> :
+                  <ListGroup.Item key={idx} action={"description" in decision} id={category.toLowerCase() + "_" + rollType + "_" + (idx + 1)}>
                     <Badge bg={CategoryCode[category]}>
                       {decision.min == decision.max ? decision.min : decision.min + "-" + decision.max}
                     </Badge>
@@ -273,7 +282,6 @@ export function RouletteCard({ category, difficulty }) {
                       {decision[rollType] === true ? "Yes" : decision[rollType] === false ? "No" : decision[rollType]}
                     </span>
                   </ListGroup.Item>
-                </OverlayTrigger>
               ))}
             </ListGroup>]
           ))}
