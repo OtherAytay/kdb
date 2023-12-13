@@ -261,8 +261,7 @@ export const clothing = {
         ],
         bra: [
             { min: 1, max: 4, bra: "Any Bra" },
-            { min: 5, max: 7, bra: "Padded Bra" },
-            { min: 8, max: 10, bra: "Sports Bra" },
+            { min: 5, max: 10, bra: "Padded Bra" },
         ],
         panties: [
             { min: 1, max: 3, panties: "Any Panties" },
@@ -295,8 +294,7 @@ export const clothing = {
         ],
         bra: [
             { min: 1, max: 1, bra: "Any Bra" },
-            { min: 2, max: 6, bra: "Padded Bra" },
-            { min: 7, max: 10, bra: "Sports Bra" },
+            { min: 2, max: 10, bra: "Padded Bra" },
         ],
         panties: [
             { min: 1, max: 10, panties: "Thong" },
@@ -307,9 +305,8 @@ export const clothing = {
         ],
         bottom: [
             { min: 1, max: 1, bottom: "None" },
-            { min: 2, max: 4, bottom: "Any Pants" },
-            { min: 5, max: 7, bottom: "Skirt" },
-            { min: 8, max: 10, bottom: "Athletic Tights" },
+            { min: 2, max: 5, bottom: "Any Pants" },
+            { min: 6, max: 10, bottom: "Skirt" },
         ],
         limbs: [
             { min: 1, max: 3, limbs: "Thigh High Socks" },
